@@ -2,16 +2,25 @@
 	"name": "zauberfisch/silverstripe-serialized-dataobject",
 	"description": "SilverStripe database field that allows saving arbitrary data in a single db field using serialization",
 	"type": "silverstripe-module",
-	"keywords": ["silverstripe", "serialize", "dataobject", "dbfield", "multivalue"],
+	"keywords": [
+		"silverstripe",
+		"serialize",
+		"dataobject",
+		"dbfield",
+		"multivalue",
+		"json"
+	],
 	"license": "BSD-3-Clause",
-	"authors": [{
-		"name": "Zauberfisch",
-		"email": "code@zauberfisch.at"
-	}],
+	"authors": [
+		{
+			"name": "Zauberfisch",
+			"email": "code@zauberfisch.at"
+		}
+	],
 	"require": {
 		"silverstripe/framework": "~3.1"
 	},
 	"extra": {
-        "installer-name": "serialized-dataobject"
-    }
+		"installer-name": "serialized-dataobject"
+	}
 }
