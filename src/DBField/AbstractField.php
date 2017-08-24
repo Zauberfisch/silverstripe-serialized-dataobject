@@ -1,15 +1,18 @@
 <?php
 
+namespace zauberfisch\SerializedDataObject\DBField;
+
+use zauberfisch\SerializedDataObject\AbstractDataObject;
+use zauberfisch\SerializedDataObject\AbstractList;
+
 /**
- * Class SerializedDBField
- *
  * @author Zauberfisch
  */
-abstract class SerializedDBField extends DBField {
+abstract class AbstractField extends \DBField {
 	protected $isChanged = false;
 
 	/**
-	 * @return SerializedDataList|SerializedDataObject|null
+	 * @return AbstractList|AbstractField|null
 	 */
 	function getValue() {
 		if ($this->value && is_string($this->value) && $this->value[0] == "'" && $this->value[strlen($this->value) - 1] == "'") {
@@ -18,13 +21,13 @@ abstract class SerializedDBField extends DBField {
 		if (!$this->value) {
 			$this->value = $this->nullValue();
 		} elseif (is_string($this->value)) {
-			$this->value = unserialize($this->value);
+			$this->value = @unserialize($this->value);
 		}
 		return $this->value;
 	}
 
 	/**
-	 * @param SerializedDataList|SerializedDataObject|SerializedDBField|array|null|string $value
+	 * @param AbstractList|AbstractDataObject|AbstractField|array|null|string $value
 	 * @param null $record
 	 * @param bool|true $markAsChanged
 	 */
@@ -44,7 +47,7 @@ abstract class SerializedDBField extends DBField {
 		if (is_a($value, __CLASS__)) {
 			$value = $value->getValue();
 		}
-		if (is_a($value, 'Serializable')) {
+		if (is_a($value, \Serializable::class)) {
 			$value = serialize($value);
 		}
 		if (is_array($value)) {
@@ -56,7 +59,7 @@ abstract class SerializedDBField extends DBField {
 	public function requireField() {
 		// keep using deprecated DB::requireField() for 3.1 compatibility
 		/** @noinspection PhpDeprecationInspection */
-		DB::requireField($this->tableName, $this->name, [
+		\DB::requireField($this->tableName, $this->name, [
 			'type' => 'text',
 			'parts' => [
 				'datatype' => 'mediumtext',

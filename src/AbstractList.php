@@ -1,11 +1,11 @@
 <?php
 
+namespace zauberfisch\SerializedDataObject;
+
 /**
- * Class SerializedDataList
- *
  * @author Zauberfisch
  */
-class SerializedDataList extends ArrayList implements Serializable, JsonSerializable {
+abstract class AbstractList extends \ArrayList implements \Serializable, \JsonSerializable {
 	public function jsonSerialize() {
 		return [
 			'class' => $this->class,
@@ -26,17 +26,17 @@ class SerializedDataList extends ArrayList implements Serializable, JsonSerializ
 	}
 	
 	public function __construct(array $items = []) {
-		array_walk($items, function ($item) {
-			if (!is_a($item, 'SerializedDataObject')) {
-				throw new InvalidArgumentException();
+		foreach($items as $item) {
+			if (!$this->validateRecord($item)) {
+				throw new \InvalidArgumentException();
 			}
-		});
+		}
 		parent::__construct($items);
 	}
 	
 	public function push($item) {
-		if (!is_a($item, 'SerializedDataObject')) {
-			throw new InvalidArgumentException();
+		if (!$this->validateRecord($item)) {
+			throw new \InvalidArgumentException();
 		}
 		parent::push($item);
 	}
@@ -46,30 +46,40 @@ class SerializedDataList extends ArrayList implements Serializable, JsonSerializ
 	}
 	
 	public function remove($item) {
-		if (!is_a($item, 'SerializedDataObject')) {
-			throw new InvalidArgumentException();
+		if (!$this->validateRecord($item)) {
+			throw new \InvalidArgumentException();
 		}
 		parent::remove($item);
 	}
 	
 	public function replace($item, $with) {
-		if (!is_a($item, 'SerializedDataObject') || !is_a($with, 'SerializedDataObject')) {
-			throw new InvalidArgumentException();
+		if (!$this->validateRecord($item)) {
+			throw new \InvalidArgumentException();
 		}
 		parent::replace($item, $with);
 	}
 	
 	public function merge($item) {
-		if (!is_a($item, 'SerializedDataObject')) {
-			throw new InvalidArgumentException();
+		if (!$this->validateRecord($item)) {
+			throw new \InvalidArgumentException();
 		}
 		parent::merge($item);
 	}
 	
 	public function unshift($item) {
-		if (!is_a($item, 'SerializedDataObject')) {
-			throw new InvalidArgumentException();
+		if (!$this->validateRecord($item)) {
+			throw new \InvalidArgumentException();
 		}
 		parent::unshift($item);
+	}
+	
+	/**
+	 * Verify if a given object is valid for this list and can be added
+	 *
+	 * @param $item
+	 * @return bool
+	 */
+	public function validateRecord($item) {
+		return true;
 	}
 }

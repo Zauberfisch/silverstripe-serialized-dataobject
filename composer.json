@@ -18,9 +18,7 @@
 		}
 	],
 	"require": {
-		"silverstripe/framework": "~3.1"
-	},
-	"extra": {
-		"installer-name": "serialized-dataobject"
+		"silverstripe/framework": "^3.6",
+		"zauberfisch/silverstripe-namespace-ssviewer": "~1.0"
 	}
 }
