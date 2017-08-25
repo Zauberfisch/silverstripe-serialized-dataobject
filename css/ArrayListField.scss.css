@@ -1,0 +1,51 @@
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField > label.left {
+  display: block;
+  float: none;
+  padding-bottom: 10px; }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn {
+  margin-left: 0; }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.field {
+  border: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  margin: 0;
+  padding: 0 0 5px; }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list {
+  border-radius: 3px;
+  border: 1px solid #CDCCD0;
+  background: rgba(0, 0, 0, 0.05);
+  margin: 0 0 10px; }
+  .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record {
+    padding: 20px 10px 10px;
+    border-bottom: 1px solid #CDCCD0;
+    position: relative; }
+    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record:last-child {
+      border-bottom: 0; }
+    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record.pre-delete {
+      background: rgba(255, 0, 0, 0.05); }
+    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls {
+      position: absolute;
+      right: 5px;
+      top: 10px; }
+      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls > * {
+        display: block;
+        float: left;
+        margin: 0 5px 0 0; }
+      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .orderable-handle {
+        height: 22px;
+        width: 16px;
+        cursor: move;
+        background: center center no-repeat url("../images/orderable-handle.png"); }
+      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .delete-record {
+        padding: 2px; }
+        .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .delete-record:before {
+          margin: 0; }
+        .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .delete-record span {
+          display: none; }
+        .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .delete-record:hover {
+          background: transparent;
+          opacity: .6; }
