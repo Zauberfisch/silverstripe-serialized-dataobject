@@ -10,6 +10,7 @@ use zauberfisch\SerializedDataObject\DBField\ArrayListField as ArrayListDBField;
 
 class ArrayListField extends FormField {
 	protected $recordFieldsCallback;
+	protected $recordFieldsUpdateCallback;
 	protected $recordClassName;
 	protected $orderable = false;
 	
@@ -147,6 +148,10 @@ class ArrayListField extends FormField {
 				->addExtraClass('controls')
 		);
 		$this->prefixRecordFields($index, $recordFields);
+		$callback = $this->getRecordFieldsUpdateCallback();
+		if ($callback) {
+			$recordFields = call_user_func($callback, $recordFields, $this, $record);
+		}
 		return (new \CompositeField($recordFields))->addExtraClass('record');
 	}
 	
@@ -244,6 +249,20 @@ class ArrayListField extends FormField {
 		return sprintf('%s[%s][%s]', $this->getName(), $index, $fieldName);
 	}
 	
+	public function handleSubField($fullFieldName) {
+		$str = substr($fullFieldName, strlen($this->getName()));
+		if (preg_match('/^\[(\d*)\]/', $str, $matches)) {
+			$fields = $this->getRecordFields($matches[1]);
+			$subField = $fields->FieldList()->dataFieldByName($fullFieldName);
+			if (!$subField) {
+				$subField = $fields->FieldList()->fieldByName($fullFieldName);
+			}
+			$subField->setForm($this->getForm());
+			return $subField;
+		}
+		return null;
+	}
+	
 	/**
 	 * @param \DataObjectInterface $record
 	 */
@@ -285,7 +304,7 @@ class ArrayListField extends FormField {
 	}
 	
 	/**
-	 * @param mixed $recordFieldsCallback
+	 * @param callable $recordFieldsCallback
 	 * @return ArrayListField
 	 */
 	public function setRecordFieldsCallback($recordFieldsCallback) {
@@ -294,7 +313,7 @@ class ArrayListField extends FormField {
 	}
 	
 	/**
-	 * @return mixed
+	 * @return callable
 	 */
 	public function getRecordFieldsCallback() {
 		$callback = $this->recordFieldsCallback;
@@ -313,5 +332,21 @@ class ArrayListField extends FormField {
 			};
 		}
 		return $callback;
+	}
+	
+	/**
+	 * @param callable $recordFieldsUpdateCallback
+	 * @return ArrayListField
+	 */
+	public function setRecordFieldsUpdateCallback($recordFieldsUpdateCallback) {
+		$this->recordFieldsUpdateCallback = $recordFieldsUpdateCallback;
+		return $this;
+	}
+	
+	/**
+	 * @return callable|null
+	 */
+	public function getRecordFieldsUpdateCallback() {
+		return $this->recordFieldsUpdateCallback;
 	}
 }

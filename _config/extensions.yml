@@ -1,0 +1,9 @@
+---
+Name: silverstripe-serialized-dataobject-extensions
+After: 'framework/*','cms/*'
+---
+Form:
+  extensions:
+    - 'zauberfisch\SerializedDataObject\Form\FormExtension'
+  url_handlers:
+    'field/$FieldName!': 'handleFieldArrayList'
