@@ -114,7 +114,7 @@ class ArrayListField extends FormField {
 		/** @noinspection PhpParamsInspection */
 		return (new \CompositeField([
 			(new \CompositeField($fields))->addExtraClass('record-list'),
-			(new \FormAction('addRecord', _t('ArrayListField.AddRecord', 'add record')))
+			(new \FormAction('addRecord', _t('zauberfisch\SerializedDataObject\Form\ArrayListField.AddRecord', 'add record')))
 				->setUseButtonTag(true)
 				->addExtraClass('font-icon-plus')
 				->addExtraClass('add-record'),
@@ -143,7 +143,7 @@ class ArrayListField extends FormField {
 				->setUseButtonTag(true)
 				->addExtraClass('delete-record')
 				->addExtraClass('font-icon-cancel-circled')
-				->setAttribute('data-confirm', _t('ArrayListField.ConfirmDelete', 'Are you sure you want to delete this record?')),
+				->setAttribute('data-confirm', _t('zauberfisch\SerializedDataObject\Form\ArrayListField.ConfirmDelete', 'Are you sure you want to delete this record?')),
 		];
 		if ($this->orderable) {
 			$controls [] = (new \FormAction('ArrayListFieldControlsOrderableUp', ''))
