@@ -18,7 +18,7 @@
 		}
 	],
 	"require": {
-		"silverstripe/framework": "^3.6",
+		"silverstripe/framework": "^3.6.4",
 		"zauberfisch/silverstripe-namespace-templates": "^1.0"
 	}
 }
