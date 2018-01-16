@@ -14,21 +14,25 @@
 	});
 	$('.zauberfisch\\\\SerializedDataObject\\\\Form\\\\ArrayListField.orderable .record-list').entwine({
 		onmatch: function () {
-			// enable sorting functionality
-			var self = this,
-				rootForm = this.closest('form');
-			self.sortable({
-				handle: ".orderable-handle",
-				axis: "y"
-			});
+			this.sortableEnable();
 			this._super();
 		},
 		onunmatch: function () {
+			this.sortableDisable();
+			this._super();
+		},
+		sortableEnable: function () {
+			// enable sorting functionality
+			this.sortable({
+				handle: ".orderable-handle",
+				axis: "y"
+			});
+		},
+		sortableDisable: function () {
 			try {
-				$(this).sortable("destroy");
+				this.sortable("destroy");
 			} catch (e) {
 			}
-			this._super();
 		}
 	});
 	$('.zauberfisch\\\\SerializedDataObject\\\\Form\\\\ArrayListField .add-record').entwine({
@@ -61,6 +65,30 @@
 				}
 				container.removeClass('pre-delete');
 			}, 100);
+			this.blur();
+			return false;
+		}
+	});
+	$('.zauberfisch\\\\SerializedDataObject\\\\Form\\\\ArrayListField .orderable-up, .zauberfisch\\\\SerializedDataObject\\\\Form\\\\ArrayListField .orderable-down').entwine({
+		onclick: function () {
+			var record = this.closest('.record'),
+				recordList = this.getContainerField().getRecordList(),
+				index = record.index();
+			console.log(index);
+			console.log(recordList.find('.record').length - 1);
+			if (
+				(index === 0 && this.hasClass('orderable-up')) ||
+				(index === recordList.find('.record').length - 1 && this.hasClass('orderable-down'))
+			) {
+				return false;
+			}
+			recordList.sortableDisable();
+			if (this.hasClass('orderable-up')) {
+				record.prev().insertAfter(record);
+			} else {
+				record.next().insertBefore(record);
+			}
+			recordList.sortableEnable();
 			this.blur();
 			return false;
 		}

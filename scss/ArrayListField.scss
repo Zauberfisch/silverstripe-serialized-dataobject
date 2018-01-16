@@ -20,12 +20,12 @@
 		border: 1px solid #CDCCD0;
 		background: rgba(#000, .05);
 		margin: 0 0 10px;
-		
+
 		.record {
 			padding: 20px 10px 10px;
 			border-bottom: 1px solid #CDCCD0;
 			position: relative;
-			
+
 			&:last-child {
 				border-bottom: 0;
 			}
@@ -36,22 +36,22 @@
 				position: absolute;
 				right: 5px;
 				top: 10px;
-				
+
 				> * {
 					display: block;
 					float: left;
 					margin: 0 5px 0 0;
 				}
-				
+
 				.orderable-handle {
 					height: 22px;
 					width: 16px;
 					cursor: move;
 					background: center center no-repeat url('../images/orderable-handle.png');
 				}
-				.delete-record {
+				.orderable-up, .orderable-down, .delete-record {
 					padding: 2px;
-					
+
 					&:before {
 						margin: 0;
 					}
@@ -63,6 +63,10 @@
 						opacity: .6;
 					}
 				}
+			}
+			&:first-child .controls .orderable-up, &:last-child .controls .orderable-down {
+				cursor: default;
+				opacity: .4 !important;
 			}
 		}
 	}

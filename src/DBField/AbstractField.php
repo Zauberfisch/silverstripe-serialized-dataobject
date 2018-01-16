@@ -27,7 +27,7 @@ abstract class AbstractField extends \DBField {
 	}
 
 	/**
-	 * @param AbstractList|AbstractDataObject|AbstractField|array|null|string $value
+	 * @param AbstractList|AbstractDataObject|AbstractField|null|string $value
 	 * @param null $record
 	 * @param bool|true $markAsChanged
 	 */

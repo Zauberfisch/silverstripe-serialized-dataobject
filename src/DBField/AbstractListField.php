@@ -2,8 +2,6 @@
 
 namespace zauberfisch\SerializedDataObject\DBField;
 
-use zauberfisch\SerializedDataObject\ArrayList;
-
 /**
  * @author Zauberfisch
  */

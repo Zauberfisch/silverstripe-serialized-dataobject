@@ -3,17 +3,12 @@
 namespace zauberfisch\SerializedDataObject\Form;
 
 use SS_HTTPRequest;
-use zauberfisch\SerializedDataObject\DataList;
 use zauberfisch\SerializedDataObject\DBField\DataListField;
 
 /**
  * @author Zauberfisch
  */
 class UploadField extends \UploadField {
-	protected function getSerializableList($ids) {
-		return new DataList(\File::get()->byIDs($ids)->toArray());
-	}
-	
 	/**
 	 * @param \DataObjectInterface|\DataObject $record
 	 * @return $this
@@ -24,34 +19,38 @@ class UploadField extends \UploadField {
 			return $this;
 		}
 		if ($record->hasField($fieldName)) {
-			$info = $record->db($fieldName);
-			if ($info == DataListField::class) {
-				// Get details to save
-				$value = $this->getSerializableList($this->getItemIDs());
-				$dbValue = new DataListField();
-				$dbValue->setValue($value, null, true);
-				$record->setField($fieldName, $dbValue);
+			/** @var DataListField $dbValue */
+			$dbValue = $record->obj($fieldName);
+			$list = $dbValue->nullValue();
+			foreach ($this->getItems() as $item) {
+				$list->add($item);
 			}
+			$dbValue->setValue($list, null, true);
+			$record->setField($fieldName, $dbValue);
 		} else {
 			parent::saveInto($record);
 		}
 		return $this;
 	}
-	
+
+	/**
+	 * @param array $value
+	 * @param null $record
+	 * @return \UploadField
+	 * @throws \ValidationException
+	 */
 	public function setValue($value, $record = null) {
 		if (is_string($value) && $value) {
-			$dbField = new DataListField();
-			$dbField->setValue($value, null, true);
-			$value = $dbField->getValue();
+			$value = @unserialize($value);
 			return parent::setValue(null, $value);
 		}
 		return parent::setValue($value, $record);
 	}
-	
+
 	private static $allowed_actions = [
 		'upload',
 	];
-	
+
 	public function upload(SS_HTTPRequest $request) {
 		$fieldName = $this->getName();
 		$baseStrLength = strpos($fieldName, '[');
@@ -68,10 +67,9 @@ class UploadField extends \UploadField {
 				);
 			}
 		}
-		$return = parent::upload($request);
-		return $return;
+		return parent::upload($request);
 	}
-	
+
 	protected function flattenFilesArray($array) {
 		$fieldName = $this->getName();
 		$keys = substr($fieldName, strpos($fieldName, '['));
