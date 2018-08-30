@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace zauberfisch\SerializedDataObject\Form;
 
 use SS_HTTPRequest;
 use zauberfisch\SerializedDataObject\DBField\DataListField;
+use zauberfisch\SerializedDataObject\Serialize\Serializer;
 
 /**
  * @author Zauberfisch
@@ -41,7 +43,7 @@ class UploadField extends \UploadField {
 	 */
 	public function setValue($value, $record = null) {
 		if (is_string($value) && $value) {
-			$value = @unserialize($value);
+			$value = Serializer::deserialize($value);
 			return parent::setValue(null, $value);
 		}
 		return parent::setValue($value, $record);

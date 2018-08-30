@@ -1,34 +1,56 @@
 <?php
+declare(strict_types=1);
 
 namespace zauberfisch\SerializedDataObject;
 
+require_once 'Serialize/JsonSerializer.php';
+
 use zauberfisch\NamespaceTemplates\Form\FormField;
+use zauberfisch\SerializedDataObject\Serialize\JsonSerializable;
+use zauberfisch\SerializedDataObject\Serialize\JsonSerializer;
+use zauberfisch\SerializedDataObject\Serialize\Serializer;
 
 /**
  * @author Zauberfisch
  * @method static \Config_ForClass|\stdClass config
  */
-abstract class AbstractDataObject extends \ViewableData implements \Serializable, \JsonSerializable, \i18nEntityProvider {
+abstract class AbstractDataObject extends \ViewableData implements \Serializable, JsonSerializable, \i18nEntityProvider {
 	private static $fields = [];
 	private static $lists = [];
 	protected $fieldsData = [];
 	protected $listsData = [];
-	
+
+	use JsonSerializer {
+		jsonSerialize as jsonSerializeTrait;
+	}
+
 	public function jsonSerialize() {
 		return array_merge([
-			'class' => $this->class,
 			'fieldsData' => $this->fieldsData,
 			'listsData' => $this->listsData,
-		]);
+		], $this->jsonSerializeTrait());
 	}
-	
+
+	public function jsonDeserialize(array $data = null) {
+		$this->fieldsData = isset($data['fieldsData']) ? $data['fieldsData'] : [];
+		$this->listsData = isset($data['listsData']) ? $data['listsData'] : [];
+	}
+
+	/**
+	 * @deprecated 4.0 Support for php serialisation will be removed in Version 4.0
+	 * @return string
+	 */
 	public function serialize() {
 		return serialize([
 			'fieldsData' => $this->fieldsData,
 			'listsData' => $this->listsData,
 		]);
 	}
-	
+
+	/**
+	 * @deprecated 4.0 Support for php serialisation will be removed in Version 4.0
+	 * @param string $serialized
+	 */
 	public function unserialize($serialized) {
 		$data = unserialize($serialized);
 		$this->class = get_class($this);
@@ -40,7 +62,7 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 			}
 			$extensions = \Config::inst()->get($class, 'extensions',
 				\Config::UNINHERITED | \Config::EXCLUDE_EXTRA_SOURCES);
-			
+
 			if ($extensions) foreach ($extensions as $extension) {
 				$instance = self::create_from_string($extension);
 				$instance->setOwner(null, $class);
@@ -48,11 +70,11 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 			}
 		}
 	}
-	
+
 	public function __get($fieldName) {
 		return $this->getField($fieldName);
 	}
-	
+
 	public function __set($fieldName, $value) {
 		return $this->setField($fieldName, $value);
 	}
@@ -69,7 +91,7 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 //		//	}
 //		return parent::__call($method, $arguments);
 //	}
-	
+
 	public function defineMethods() {
 		parent::defineMethods();
 		// TODO how to handle method name collisions?
@@ -86,11 +108,11 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 			//$this->addWrapperMethod("get$field", 'getField');
 		}
 	}
-	
+
 	public function hasField($name) {
 		return in_array($name, static::config()->fields);
 	}
-	
+
 	public function getField($name) {
 		if ($this->hasField($name)) {
 			if (isset($this->fieldsData[$name])) {
@@ -100,7 +122,7 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		throw new \Exception("Could not find field '$name'.");
 	}
-	
+
 	public function setField($name, $value) {
 		if ($this->hasField($name)) {
 			$this->fieldsData[$name] = $value;
@@ -108,11 +130,11 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		throw new \Exception("Could not find field '$name'.");
 	}
-	
+
 	public function hasList($name) {
 		return in_array($name, static::config()->lists);
 	}
-	
+
 	public function getList($name) {
 		if ($this->hasList($name)) {
 			if (!isset($this->listsData[$name])) {
@@ -123,7 +145,7 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		throw new \Exception("Could not find field '$name'.");
 	}
-	
+
 	public function setList($name, AbstractList $value) {
 		if ($this->hasList($name)) {
 			$this->listsData[$name] = $value;
@@ -131,7 +153,7 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		throw new \Exception("Could not find field '$name'.");
 	}
-	
+
 	/**
 	 * @param array $data
 	 * @return $this
@@ -145,16 +167,16 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 					if ($this->hasList($name)) {
 						$this->setList($name, $value);
 					}
-				} elseif ($this->hasField($name)) {
+				} else if ($this->hasField($name)) {
 					$this->setField($name, $value);
 				}
 			}
 		}
 		return $this;
 	}
-	
+
 	private static $_cache_field_labels = [];
-	
+
 	protected function i18nFields() {
 		$fields = [];
 		$ancestry = array_reverse(\ClassInfo::ancestry($this->class));
@@ -177,7 +199,7 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		return $fields;
 	}
-	
+
 	public function fieldLabels() {
 		$cacheKey = $this->class;
 		if (!isset(self::$_cache_field_labels[$cacheKey])) {
@@ -196,12 +218,12 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		return self::$_cache_field_labels[$cacheKey];
 	}
-	
+
 	public function fieldLabel($name) {
 		$labels = $this->fieldLabels();
 		return (isset($labels[$name])) ? $labels[$name] : \FormField::name_to_label($name);
 	}
-	
+
 	public function provideI18nEntities() {
 		$entities = [];
 		foreach ($this->i18nFields() as $className => $types) {
@@ -213,12 +235,12 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		return $entities;
 	}
-	
+
 	public function __toString() {
-		return serialize($this);
+		return Serializer::serialize($this);
 	}
-	
-	
+
+
 	/**
 	 * Process tri-state responses from permission-alterting extensions.  The extensions are
 	 * expected to return one of three values:
@@ -249,7 +271,7 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param \Member $member
 	 * @return boolean
@@ -261,7 +283,7 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		return \Permission::check('ADMIN', 'any', $member);
 	}
-	
+
 	/**
 	 * @param \Member $member
 	 * @return boolean
@@ -273,7 +295,7 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		return \Permission::check('ADMIN', 'any', $member);
 	}
-	
+
 	/**
 	 * @param \Member $member
 	 * @return boolean
@@ -285,7 +307,7 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		return \Permission::check('ADMIN', 'any', $member);
 	}
-	
+
 	/**
 	 * @todo Should canCreate be a static method?
 	 * @param \Member $member
@@ -298,14 +320,14 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 		return \Permission::check('ADMIN', 'any', $member);
 	}
-	
+
 	public function i18n_singular_name() {
 		// TODO fix class name
 		$class = explode('\\', $this->class);
 		$class = $class[count($class) - 1];
 		return _t("{$this->class}.SINGULARNAME", FormField::name_to_label($class));
 	}
-	
+
 	public function i18n_plural_name() {
 		$name = $this->i18n_singular_name();
 		//if the penultimate character is not a vowel, replace "y" with "ies"

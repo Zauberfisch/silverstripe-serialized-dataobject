@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace zauberfisch\SerializedDataObject\DBField;
 
 use zauberfisch\SerializedDataObject\AbstractDataObject;
 use zauberfisch\SerializedDataObject\AbstractList;
+use zauberfisch\SerializedDataObject\Serialize\Serializer;
 
 /**
  * @author Zauberfisch
@@ -15,13 +17,8 @@ abstract class AbstractField extends \DBField {
 	 * @return AbstractList|AbstractField|null
 	 */
 	function getValue() {
-		if ($this->value && is_string($this->value) && $this->value[0] == "'" && $this->value[strlen($this->value) - 1] == "'") {
-			$this->value = substr($this->value, 1, -1);
-		}
 		if (!$this->value) {
 			$this->value = $this->nullValue();
-		} elseif (is_string($this->value)) {
-			$this->value = @unserialize($this->value);
 		}
 		return $this->value;
 	}
@@ -36,6 +33,9 @@ abstract class AbstractField extends \DBField {
 		if (is_a($value, __CLASS__)) {
 			$value = $value->getValue();
 		}
+		if (is_string($value)) {
+			$value = Serializer::deserialize($value);
+		}
 		parent::setValue($value, $record);
 	}
 
@@ -47,11 +47,8 @@ abstract class AbstractField extends \DBField {
 		if (is_a($value, __CLASS__)) {
 			$value = $value->getValue();
 		}
-		if (is_a($value, \Serializable::class)) {
-			$value = serialize($value);
-		}
-		if (is_array($value)) {
-			$value = serialize($value);
+		if (is_object($value)) {
+			$value = Serializer::serialize($value);
 		}
 		return parent::prepValueForDB($value);
 	}

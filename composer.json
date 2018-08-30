@@ -18,6 +18,8 @@
 		}
 	],
 	"require": {
+		"php": "^7",
+		"ext-json": "*",
 		"silverstripe/framework": "^3.6.4",
 		"zauberfisch/silverstripe-namespace-templates": "^1.0"
 	}

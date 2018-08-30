@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace zauberfisch\SerializedDataObject\Form;
 
@@ -14,7 +15,7 @@ class ArrayListField extends FormField {
 	protected $recordClassName;
 	protected $orderable = false;
 
-	public function __construct($name, $title = null, $recordClassName) {
+	public function __construct($name, $title, $recordClassName) {
 		$this->recordClassName = $recordClassName;
 		parent::__construct($name, $title);
 	}

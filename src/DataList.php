@@ -1,29 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace zauberfisch\SerializedDataObject;
 
 class DataList extends AbstractList {
-	protected function convertToIDList() {
+	protected function serializeItems() {
 		$items = [];
 		foreach ($this->toArray() as $item) {
 			$items[] = [$item->ClassName, $item->ID];
 		}
 		return $items;
 	}
-	
-	public function jsonSerialize() {
-		return [
-			'class' => $this->class,
-			'items' => $this->convertToIDList(),
-		];
-	}
-	
-	public function serialize() {
-		return serialize($this->convertToIDList());
-	}
-	
-	public function unserialize($serialized) {
-		$items = unserialize($serialized);
+
+	protected function deserializeItems(array $items) {
 		$map = [];
 		foreach ($items as $item) {
 			$className = $item[0];
@@ -34,14 +23,15 @@ class DataList extends AbstractList {
 			}
 			$map[$baseClass][] = $id;
 		}
-		$this->items = [];
+		$items = [];
 		foreach ($map as $baseClass => $ids) {
 			foreach ($baseClass::get()->byIDs($ids) as $item) {
-				$this->items[] = $item;
+				$items[] = $item;
 			}
 		}
+		return $items;
 	}
-	
+
 	public function validateRecord($item) {
 		return is_a($item, \DataObject::class);
 	}
