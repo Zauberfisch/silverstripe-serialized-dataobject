@@ -64,9 +64,9 @@ class SocialMediaLink extends \zauberfisch\SerializedDataObject\AbstractDataObje
 	];
 
 	public function getCMSFields() {
-		$fields = new \FieldList();
-		$fields->push(new \FieldGroup([
-			new \DropdownField('Type', $this->fieldLabel('Type'), [
+		$fields = new \SilverStripe\Forms\FieldList();
+		$fields->push(new \SilverStripe\Forms\FieldGroup([
+			new \SilverStripe\Forms\DropdownField('Type', $this->fieldLabel('Type'), [
 				'facebook' => 'Facebook',
 				'xing' => 'Xing',
 				'linkedin' => 'LinkedIn',
@@ -76,8 +76,8 @@ class SocialMediaLink extends \zauberfisch\SerializedDataObject\AbstractDataObje
 				'youtube' => 'YouTube',
 				'google-plus' => 'GooglePlus',
 			]),
-			new \TextField('Title', $this->fieldLabel('Title')),
-			new \TextField('Link', $this->fieldLabel('Link')),
+			new \SilverStripe\Forms\TextField('Title', $this->fieldLabel('Title')),
+			new \SilverStripe\Forms\TextField('Link', $this->fieldLabel('Link')),
 		]));
 		return $fields;
 	}
@@ -94,13 +94,13 @@ SiteConfig:
 ```php
 <?php
 #SiteConfigExtension.php
-class SiteConfigExtension extends \DataExtension {
+class SiteConfigExtension extends \SilverStripe\ORM\DataExtension {
 	private static $db = [
 		// DB Field is always the a serialized DBField, not the object you want to store
 		'SocialLinks' => \zauberfisch\SerializedDataObject\DBField\ArrayListField::class,
 	];
 	
-	public function updateCMSFields(\FieldList $fields) {
+	public function updateCMSFields(\SilverStripe\Forms\FieldList $fields) {
 		$fields->addFieldsToTab('Root.Main', [
 			(new \zauberfisch\SerializedDataObject\Form\ArrayListField(
 				'SocialLinks',

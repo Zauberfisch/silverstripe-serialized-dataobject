@@ -1,8 +1,8 @@
 ---
 Name: silverstripe-serialized-dataobject-extensions
-After: 'framework/*','cms/*'
+After: 'framework/*'
 ---
-Form:
+SilverStripe\Forms\Form:
   extensions:
     - 'zauberfisch\SerializedDataObject\Form\FormExtension'
   url_handlers:

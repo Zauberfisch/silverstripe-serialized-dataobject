@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace zauberfisch\SerializedDataObject\DBField;
 
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBField;
 use zauberfisch\SerializedDataObject\AbstractDataObject;
 use zauberfisch\SerializedDataObject\AbstractList;
 use zauberfisch\SerializedDataObject\Serialize\Serializer;
@@ -10,7 +12,7 @@ use zauberfisch\SerializedDataObject\Serialize\Serializer;
 /**
  * @author Zauberfisch
  */
-abstract class AbstractField extends \DBField {
+abstract class AbstractField extends DBField {
 	protected $isChanged = false;
 
 	/**
@@ -55,8 +57,7 @@ abstract class AbstractField extends \DBField {
 
 	public function requireField() {
 		// keep using deprecated DB::requireField() for 3.1 compatibility
-		/** @noinspection PhpDeprecationInspection */
-		\DB::requireField($this->tableName, $this->name, [
+		DB::require_field($this->tableName, $this->name, [
 			'type' => 'text',
 			'parts' => [
 				'datatype' => 'mediumtext',

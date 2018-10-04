@@ -13,8 +13,7 @@ The primary motivation for this module is to be able to save collections of data
 
 ## Requirements
 
-* silverstripe/framework >=3.6
-* zauberfisch/silverstripe-namespace-templates >=1
+* silverstripe/framework >=4.2
 
 ## Installation
 

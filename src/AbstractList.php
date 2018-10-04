@@ -12,7 +12,7 @@ require_once 'Serialize/JsonSerializer.php';
 /**
  * @author Zauberfisch
  */
-abstract class AbstractList extends \ArrayList implements \Serializable, JsonSerializable {
+abstract class AbstractList extends \SilverStripe\ORM\ArrayList implements JsonSerializable {
 	use JsonSerializer {
 		jsonSerialize as jsonSerializeTrait;
 	}
@@ -27,21 +27,21 @@ abstract class AbstractList extends \ArrayList implements \Serializable, JsonSer
 		$this->items = isset($data['items']) && is_array($data['items']) ? $this->deserializeItems($data['items']) : [];
 	}
 
-	/**
-	 * @deprecated 4.0 Support for php serialisation will be removed in Version 4.0
-	 * @return string
-	 */
-	public function serialize() {
-		return serialize($this->serializeItems());
-	}
-
-	/**
-	 * @deprecated 4.0 Support for php serialisation will be removed in Version 4.0
-	 * @param string $serialized
-	 */
-	public function unserialize($serialized) {
-		$this->items = $this->deserializeItems(unserialize($serialized));
-	}
+	///**
+	// * @deprecated 4.0 Support for php serialisation will be removed in Version 4.0
+	// * @return string
+	// */
+	//public function serialize() {
+	//	return serialize($this->serializeItems());
+	//}
+	//
+	///**
+	// * @deprecated 4.0 Support for php serialisation will be removed in Version 4.0
+	// * @param string $serialized
+	// */
+	//public function unserialize($serialized) {
+	//	$this->items = $this->deserializeItems(unserialize($serialized));
+	//}
 
 	/**
 	 * @return array

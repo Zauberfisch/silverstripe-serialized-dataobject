@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace zauberfisch\SerializedDataObject;
 
+use SilverStripe\ORM\DataObject;
+
 class DataList extends AbstractList {
 	protected function serializeItems() {
 		$items = [];
@@ -16,7 +18,7 @@ class DataList extends AbstractList {
 		$map = [];
 		foreach ($items as $item) {
 			$className = $item[0];
-			$baseClass = \ClassInfo::baseDataClass($className);
+			$baseClass = DataObject::getSchema()->baseDataClass($className);
 			$id = $item[1];
 			if (!isset($map[$baseClass])) {
 				$map[$baseClass] = [];
@@ -33,6 +35,6 @@ class DataList extends AbstractList {
 	}
 
 	public function validateRecord($item) {
-		return is_a($item, \DataObject::class);
+		return is_a($item, DataObject::class);
 	}
 }

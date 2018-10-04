@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace zauberfisch\SerializedDataObject\Form;
 
-use zauberfisch\NamespaceTemplates\Form\CompositeField;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\DatalessField;
+use SilverStripe\Forms\FormField;
 
 class ProxyArrayListField extends CompositeField {
 	public function __construct($name, $title, $recordClassName) {
@@ -23,7 +26,7 @@ class ProxyArrayListField extends CompositeField {
 
 }
 
-class ProxyArrayListField_FieldProxy extends \DatalessField {
+class ProxyArrayListField_FieldProxy extends DatalessField {
 	private static $allowed_actions = [
 		'handleField',
 	];
@@ -33,7 +36,7 @@ class ProxyArrayListField_FieldProxy extends \DatalessField {
 	protected $originalField;
 
 	/**
-	 * @param \FormField $originalField
+	 * @param FormField $originalField
 	 */
 	public function __construct($originalField) {
 		$this->originalField = $originalField;
@@ -41,7 +44,7 @@ class ProxyArrayListField_FieldProxy extends \DatalessField {
 	}
 
 
-	public function handleField(\SS_HTTPRequest $request) {
+	public function handleField(HTTPRequest $request) {
 		return $this->originalField;
 	}
 

@@ -3,8 +3,16 @@ declare(strict_types=1);
 
 namespace zauberfisch\SerializedDataObject\Form;
 
-use zauberfisch\NamespaceTemplates\Form\CompositeField;
-use zauberfisch\NamespaceTemplates\Form\FormField;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\View\Requirements;
 use zauberfisch\SerializedDataObject\AbstractDataObject;
 use zauberfisch\SerializedDataObject\ArrayList;
 use zauberfisch\SerializedDataObject\DBField\ArrayListField as ArrayListDBField;
@@ -14,18 +22,19 @@ class ArrayListField extends FormField {
 	protected $recordFieldsUpdateCallback;
 	protected $recordClassName;
 	protected $orderable = false;
-
+	
 	public function __construct($name, $title, $recordClassName) {
 		$this->recordClassName = $recordClassName;
 		parent::__construct($name, $title);
 	}
-
+	
 	/**
 	 * @param ArrayListDBField|array|string $val
+	 * @param null $data
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function setValue($val) {
+	public function setValue($val, $data = null) {
 		if (is_a($val, ArrayListDBField::class)) {
 			$this->value = $val;
 		} else {
@@ -44,7 +53,7 @@ class ArrayListField extends FormField {
 		}
 		return $this;
 	}
-
+	
 	/**
 	 * @return \zauberfisch\SerializedDataObject\DBField\ArrayListField
 	 * @throws \Exception
@@ -57,7 +66,7 @@ class ArrayListField extends FormField {
 		}
 		return $return;
 	}
-
+	
 	/**
 	 * @param $array
 	 * @return ArrayList
@@ -74,14 +83,14 @@ class ArrayListField extends FormField {
 		}
 		return new ArrayList($records);
 	}
-
+	
 	/**
 	 * @return array
 	 */
 	public function getAttributes() {
 		return $this->attributes;
 	}
-
+	
 	/**
 	 * @param array $properties
 	 * @return string
@@ -95,15 +104,15 @@ class ArrayListField extends FormField {
 		$this->setAttribute('data-add-record-url', $this->getAddRecordLink());
 		return parent::FieldHolder($properties);
 	}
-
+	
 	/**
 	 * @param array $properties
 	 * @return string
 	 * @throws \Exception
 	 */
 	public function Field($properties = []) {
-		\Requirements::javascript(SERIALIZED_DATAOBJECT_DIR . '/javascript/ArrayListField.js');
-		\Requirements::css(SERIALIZED_DATAOBJECT_DIR . '/css/ArrayListField.scss.css');
+		Requirements::javascript(SERIALIZED_DATAOBJECT_DIR . '/javascript/ArrayListField.js');
+		Requirements::css(SERIALIZED_DATAOBJECT_DIR . '/css/ArrayListField.scss.css');
 		$records = $this->Value()->getValue();
 		$fields = [];
 		foreach ($records as $i => $record) {
@@ -113,25 +122,25 @@ class ArrayListField extends FormField {
 			}
 		}
 		/** @noinspection PhpParamsInspection */
-		return (new \CompositeField([
-			(new \CompositeField($fields))->addExtraClass('record-list'),
-			(new \FormAction('addRecord', _t('zauberfisch\SerializedDataObject\Form\ArrayListField.AddRecord', 'add record')))
+		return (new CompositeField([
+			(new CompositeField($fields))->addExtraClass('record-list'),
+			(new FormAction('addRecord', _t('zauberfisch\SerializedDataObject\Form\ArrayListField.AddRecord', 'add record')))
 				->setUseButtonTag(true)
 				->addExtraClass('font-icon-plus')
 				->addExtraClass('add-record'),
 		]))->FieldHolder()->forTemplate();
 	}
-
+	
 	/**
 	 * @param int $index
 	 * @param AbstractDataObject|null $record
-	 * @return \CompositeField
+	 * @return CompositeField
 	 * @throws \Exception
 	 */
 	protected function getRecordFields($index, AbstractDataObject $record = null) {
-		/** @var \FieldList $recordFields */
+		/** @var FieldList $recordFields */
 		$recordFields = call_user_func($this->getRecordFieldsCallback(), $this, $record);
-		if (!is_a($recordFields, \FieldList::class)) {
+		if (!is_a($recordFields, FieldList::class)) {
 			throw new \Exception(sprintf(
 				'RecordFieldsCallback is expected to return FieldList, but returned "%s"',
 				is_object($recordFields) ? get_class($recordFields) : gettype($recordFields)
@@ -140,22 +149,22 @@ class ArrayListField extends FormField {
 		$recordFields->setForm($this->form);
 		$this->loadDataFromRecord($recordFields->dataFields(), $record);
 		$controls = [
-			(new \FormAction('ArrayListFieldControlsDelete', ''))
+			(new FormAction('ArrayListFieldControlsDelete', ''))
 				->setUseButtonTag(true)
 				->addExtraClass('delete-record')
 				->addExtraClass('font-icon-cancel-circled')
 				->setAttribute('data-confirm', _t('zauberfisch\SerializedDataObject\Form\ArrayListField.ConfirmDelete', 'Are you sure you want to delete this record?')),
 		];
 		if ($this->orderable) {
-			$controls [] = (new \FormAction('ArrayListFieldControlsOrderableUp', ''))
+			$controls [] = (new FormAction('ArrayListFieldControlsOrderableUp', ''))
 				->setUseButtonTag(true)
 				->addExtraClass('orderable-up')
 				->addExtraClass('font-icon-up-open-big');
-			$controls [] = (new \FormAction('ArrayListFieldControlsOrderableDown', ''))
+			$controls [] = (new FormAction('ArrayListFieldControlsOrderableDown', ''))
 				->setUseButtonTag(true)
 				->addExtraClass('orderable-down')
 				->addExtraClass('font-icon-down-open-big');
-			$controls [] = new \LiteralField('ArrayListFieldControlsOrderableHandle', '<div class="orderable-handle"></div>');
+			$controls [] = new LiteralField('ArrayListFieldControlsOrderableHandle', '<div class="orderable-handle"></div>');
 		}
 		$recordFields->unshift(
 			(new CompositeField($controls))
@@ -167,34 +176,35 @@ class ArrayListField extends FormField {
 		if ($callback) {
 			$recordFields = call_user_func($callback, $recordFields, $this, $record);
 		}
-		return (new \CompositeField($recordFields))->addExtraClass('record');
+		return (new CompositeField($recordFields))->addExtraClass('record');
 	}
-
+	
 	const MERGE_DEFAULT = 0;
 	const MERGE_CLEAR_MISSING = 1;
 	const MERGE_IGNORE_FALSEISH = 2;
-
+	
 	protected function loadDataFromRecord($dataFields, $data) {
 		$mergeStrategy = 0;
 		foreach ($dataFields as $field) {
-			/** @var \FormField $field */
+			/** @var FormField $field */
 			$name = $field->getName();
-
+			
 			// First check looks for (fieldname)_unchanged, an indicator that we shouldn't overwrite the field value
 			if (is_array($data) && isset($data[$name . '_unchanged'])) continue;
-
+			
 			// Does this property exist on $data?
 			$exists = false;
 			// The value from $data for this field
 			$val = null;
-
+			
 			if (is_object($data)) {
+				/** @var DataObject $data */
 				$exists = (
 					isset($data->$name) ||
-					$data->hasMethod($name) ||
-					($data->hasMethod('hasField') && $data->hasField($name))
+					ClassInfo::hasMethod($data, $name) ||
+					(ClassInfo::hasMethod($data, 'hasField') && $data->hasField($name))
 				);
-
+				
 				if ($exists) {
 					$val = $data->__get($name);
 				}
@@ -206,11 +216,11 @@ class ArrayListField extends FormField {
 				else if (preg_match_all('/(.*)\[(.*)\]/U', $name, $matches)) {
 					//discard first match which is just the whole string
 					array_shift($matches);
-
+					
 					$keys = array_pop($matches);
 					$name = array_shift($matches);
 					$name = array_shift($name);
-
+					
 					if (array_key_exists($name, $data)) {
 						$tmpData = &$data[$name];
 						// drill down into the data array looking for the corresponding value
@@ -231,7 +241,7 @@ class ArrayListField extends FormField {
 					}
 				}
 			}
-
+			
 			// save to the field if either a value is given, or loading of blank/undefined values is forced
 			if ($exists) {
 				if ($val != false || ($mergeStrategy & self::MERGE_IGNORE_FALSEISH) != self::MERGE_IGNORE_FALSEISH) {
@@ -243,13 +253,14 @@ class ArrayListField extends FormField {
 			}
 		}
 	}
-
+	
 	/**
-	 * @param \FieldList $fields
+	 * @param $index
+	 * @param FieldList $fields
 	 */
 	protected function prefixRecordFields($index, $fields) {
 		foreach ($fields as $field) {
-			/** @var \FormField|\CompositeField $field */
+			/** @var FormField|CompositeField $field */
 			$name = $field->getName();
 			if ($name) {
 				$field->setName($this->getPrefixedRecordFieldName($index, $name));
@@ -259,11 +270,11 @@ class ArrayListField extends FormField {
 			}
 		}
 	}
-
+	
 	public function getPrefixedRecordFieldName($index, $fieldName) {
 		return sprintf('%s[%s][%s]', $this->getName(), $index, $fieldName);
 	}
-
+	
 	public function handleSubField($fullFieldName) {
 		$str = substr($fullFieldName, strlen($this->getName()));
 		if (preg_match('/^\[(\d*)\]/', $str, $matches)) {
@@ -277,27 +288,27 @@ class ArrayListField extends FormField {
 		}
 		return null;
 	}
-
+	
 	/**
-	 * @param \DataObjectInterface $record
+	 * @param DataObjectInterface $record
 	 */
-	public function saveInto(\DataObjectInterface $record) {
+	public function saveInto(DataObjectInterface $record) {
 		$record->{$this->name} = $this->Value();
 	}
-
+	
 	private static $allowed_actions = [
 		'addRecord',
 	];
-
-	public function addRecord(\SS_HTTPRequest $r) {
+	
+	public function addRecord(HTTPRequest $r) {
 		$index = (int)$r->getVar('index');
 		return $this->getRecordFields($index)->FieldHolder()->forTemplate();
 	}
-
+	
 	public function getAddRecordLink() {
 		return $this->Link('addRecord');
 	}
-
+	
 	/**
 	 * @param bool $bool
 	 * @return ArrayListField
@@ -306,18 +317,18 @@ class ArrayListField extends FormField {
 		$this->orderable = $bool;
 		return $this;
 	}
-
+	
 	/**
 	 * @return bool
 	 */
 	public function isOrderable() {
 		return $this->orderable;
 	}
-
+	
 	public function setForm($form) {
 		parent::setForm($form);
 	}
-
+	
 	/**
 	 * @param callable $recordFieldsCallback
 	 * @return ArrayListField
@@ -326,7 +337,7 @@ class ArrayListField extends FormField {
 		$this->recordFieldsCallback = $recordFieldsCallback;
 		return $this;
 	}
-
+	
 	/**
 	 * @return callable
 	 */
@@ -341,14 +352,14 @@ class ArrayListField extends FormField {
 			 */
 			$callback = function (ArrayListField $field, $record = null) use ($class) {
 				if (!$record) {
-					$record = $class::singleton();
+					$record = singleton($class);
 				}
 				return $record->getCMSFields();
 			};
 		}
 		return $callback;
 	}
-
+	
 	/**
 	 * @param callable $recordFieldsUpdateCallback
 	 * @return ArrayListField
@@ -357,7 +368,7 @@ class ArrayListField extends FormField {
 		$this->recordFieldsUpdateCallback = $recordFieldsUpdateCallback;
 		return $this;
 	}
-
+	
 	/**
 	 * @return callable|null
 	 */
