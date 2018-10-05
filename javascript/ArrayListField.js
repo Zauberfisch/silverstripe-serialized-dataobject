@@ -1,7 +1,7 @@
 (function ($) {
 	$('.zauberfisch\\\\SerializedDataObject\\\\Form\\\\ArrayListField').entwine({
 		getRecordList: function () {
-			return this.find('.record-list');
+			return this.find('.record-list > .form__fieldgroup');
 		}
 	});
 	$('.zauberfisch\\\\SerializedDataObject\\\\Form\\\\ArrayListField *').entwine({
@@ -23,14 +23,14 @@
 		},
 		sortableEnable: function () {
 			// enable sorting functionality
-			this.sortable({
+			this.find('> .form__fieldgroup').sortable({
 				handle: ".orderable-handle",
 				axis: "y"
 			});
 		},
 		sortableDisable: function () {
 			try {
-				this.sortable("destroy");
+				this.find('> .form__fieldgroup').sortable("destroy");
 			} catch (e) {
 			}
 		}
@@ -74,8 +74,8 @@
 			var record = this.closest('.record'),
 				recordList = this.getContainerField().getRecordList(),
 				index = record.index();
-			console.log(index);
-			console.log(recordList.find('.record').length - 1);
+			// console.log(index);
+			// console.log(recordList.find('.record').length - 1);
 			if (
 				(index === 0 && this.hasClass('orderable-up')) ||
 				(index === recordList.find('.record').length - 1 && this.hasClass('orderable-down'))

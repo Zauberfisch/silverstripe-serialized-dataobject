@@ -22,6 +22,7 @@ class ArrayListField extends FormField {
 	protected $recordFieldsUpdateCallback;
 	protected $recordClassName;
 	protected $orderable = false;
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_CUSTOM;
 	
 	public function __construct($name, $title, $recordClassName) {
 		$this->recordClassName = $recordClassName;
@@ -128,7 +129,7 @@ class ArrayListField extends FormField {
 				->setUseButtonTag(true)
 				->addExtraClass('font-icon-plus')
 				->addExtraClass('add-record'),
-		]))->FieldHolder()->forTemplate();
+		]))->addExtraClass('field-inner')->FieldHolder()->forTemplate();
 	}
 	
 	/**
@@ -293,7 +294,7 @@ class ArrayListField extends FormField {
 	 * @param DataObjectInterface $record
 	 */
 	public function saveInto(DataObjectInterface $record) {
-		$record->{$this->name} = $this->Value();
+		$record->{$this->name} = $this->Value()->__toString();
 	}
 	
 	private static $allowed_actions = [

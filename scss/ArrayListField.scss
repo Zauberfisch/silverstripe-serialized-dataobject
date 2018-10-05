@@ -5,8 +5,34 @@
 		padding-bottom: 10px;
 	}
 	> .middleColumn {
-		margin-left: 0;
+		max-width: 83.33333%;
 	}
+	div.CompositeField {
+		margin: 0 !important;
+		padding: 0 !important;
+		display: block !important;
+		
+		> .form__fieldgroup {
+			margin: 0 !important;
+			padding: 0 !important;
+			max-width: none !important;
+			-webkit-flex: none !important;
+			flex: none !important;
+		}
+	}
+	//div.field-inner {
+	//	display: block !important;
+	//
+	//	> div {
+	//		margin-left: 0 !important;
+	//		display: block !important;
+	//		padding-left: 0 !important;
+	//		padding-right: 0 !important;
+	//		max-width: 83.33333% !important;
+	//		-webkit-flex: none !important;
+	//		flex: none !important;
+	//	}
+	//}
 	div.field {
 		border: 0;
 		-webkit-box-shadow: none;
@@ -19,13 +45,13 @@
 		border-radius: 3px;
 		border: 1px solid #CDCCD0;
 		background: rgba(#000, .05);
-		margin: 0 0 10px;
-
+		margin: 0 0 10px !important;
+		
 		.record {
-			padding: 20px 10px 10px;
+			padding: 15px 10px 10px !important;
 			border-bottom: 1px solid #CDCCD0;
 			position: relative;
-
+			
 			&:last-child {
 				border-bottom: 0;
 			}
@@ -34,37 +60,45 @@
 			}
 			.controls {
 				position: absolute;
-				right: 5px;
-				top: 10px;
-
-				> * {
-					display: block;
-					float: left;
-					margin: 0 5px 0 0;
-				}
-
-				.orderable-handle {
-					height: 22px;
-					width: 16px;
-					cursor: move;
-					background: center center no-repeat url('../images/orderable-handle.png');
-				}
-				.orderable-up, .orderable-down, .delete-record {
-					padding: 2px;
-
-					&:before {
-						margin: 0;
+				right: 0;
+				top: 0;
+				z-index: 50;
+				
+				> .form__fieldgroup {
+					> * {
+						display: block;
+						float: left;
+						margin: 0 5px 0 0;
 					}
-					span {
-						display: none;
-					}
-					&:hover {
+					
+					button {
 						background: transparent;
-						opacity: .6;
+						border-radius: none;
+					}
+					.orderable-handle {
+						height: 22px;
+						width: 16px;
+						cursor: move;
+						background: center center no-repeat url('../images/orderable-handle.png');
+					}
+					.orderable-up, .orderable-down, .delete-record {
+						padding: 2px;
+						
+						&:before {
+							margin: 0;
+						}
+						span {
+							display: none;
+						}
+						&:hover {
+							background: transparent;
+							opacity: .6;
+						}
 					}
 				}
 			}
-			&:first-child .controls .orderable-up, &:last-child .controls .orderable-down {
+			&:first-child .controls > .form__fieldgroup .orderable-up,
+			&:last-child .controls > .form__fieldgroup .orderable-down {
 				cursor: default;
 				opacity: .4 !important;
 			}

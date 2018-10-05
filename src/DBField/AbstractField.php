@@ -14,7 +14,7 @@ use zauberfisch\SerializedDataObject\Serialize\Serializer;
  */
 abstract class AbstractField extends DBField {
 	protected $isChanged = false;
-
+	
 	/**
 	 * @return AbstractList|AbstractField|null
 	 */
@@ -24,7 +24,7 @@ abstract class AbstractField extends DBField {
 		}
 		return $this->value;
 	}
-
+	
 	/**
 	 * @param AbstractList|AbstractDataObject|AbstractField|null|string $value
 	 * @param null $record
@@ -40,11 +40,11 @@ abstract class AbstractField extends DBField {
 		}
 		parent::setValue($value, $record);
 	}
-
+	
 	public function isChanged() {
 		return $this->isChanged;
 	}
-
+	
 	public function prepValueForDB($value) {
 		if (is_a($value, __CLASS__)) {
 			$value = $value->getValue();
@@ -54,9 +54,8 @@ abstract class AbstractField extends DBField {
 		}
 		return parent::prepValueForDB($value);
 	}
-
+	
 	public function requireField() {
-		// keep using deprecated DB::requireField() for 3.1 compatibility
 		DB::require_field($this->tableName, $this->name, [
 			'type' => 'text',
 			'parts' => [
@@ -67,7 +66,7 @@ abstract class AbstractField extends DBField {
 			],
 		]);
 	}
-
+	
 	public function __toString() {
 		return $this->prepValueForDB($this->getValue());
 	}
