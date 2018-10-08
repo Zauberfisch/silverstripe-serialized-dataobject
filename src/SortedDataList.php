@@ -5,12 +5,12 @@ namespace zauberfisch\SerializedDataObject;
 
 class SortedDataList extends DataList {
 	protected function deserializeItems(array $items) {
-		$items = [];
+		$_items = [];
 		foreach ($items as $item) {
 			$className = $item[0];
 			$id = $item[1];
-			$items[] = $className::get()->byID($id);
+			$_items[] = $className::get()->byID($id);
 		}
-		return $items;
+		return $_items;
 	}
 }

@@ -23,13 +23,13 @@ class DataList extends AbstractList {
 			}
 			$map[$baseClass][] = $id;
 		}
-		$items = [];
+		$_items = [];
 		foreach ($map as $baseClass => $ids) {
 			foreach ($baseClass::get()->byIDs($ids) as $item) {
-				$items[] = $item;
+				$_items[] = $item;
 			}
 		}
-		return $items;
+		return $_items;
 	}
 
 	public function validateRecord($item) {
