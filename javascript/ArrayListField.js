@@ -74,8 +74,6 @@
 			var record = this.closest('.record'),
 				recordList = this.getContainerField().getRecordList(),
 				index = record.index();
-			console.log(index);
-			console.log(recordList.find('.record').length - 1);
 			if (
 				(index === 0 && this.hasClass('orderable-up')) ||
 				(index === recordList.find('.record').length - 1 && this.hasClass('orderable-down'))

@@ -42,7 +42,6 @@
 					float: left;
 					margin: 0 5px 0 0;
 				}
-
 				.orderable-handle {
 					height: 22px;
 					width: 16px;
@@ -64,7 +63,7 @@
 					}
 				}
 			}
-			&:first-child .controls .orderable-up, &:last-child .controls .orderable-down {
+			&:first-child > .controls .orderable-up, &:last-child > .controls .orderable-down {
 				cursor: default;
 				opacity: .4 !important;
 			}
