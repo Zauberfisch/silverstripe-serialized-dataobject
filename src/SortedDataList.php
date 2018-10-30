@@ -9,7 +9,10 @@ class SortedDataList extends DataList {
 		foreach ($items as $item) {
 			$className = $item[0];
 			$id = $item[1];
-			$_items[] = $className::get()->byID($id);
+			$itemObj = $className::get()->byID($id);
+			if ($itemObj && $itemObj->exists()) {
+				$_items[] = $itemObj;
+			}
 		}
 		return $_items;
 	}
