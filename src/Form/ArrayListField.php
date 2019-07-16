@@ -112,8 +112,8 @@ class ArrayListField extends FormField {
 	 * @throws \Exception
 	 */
 	public function Field($properties = []) {
-		Requirements::javascript(SERIALIZED_DATAOBJECT_DIR . '/javascript/ArrayListField.js');
-		Requirements::css(SERIALIZED_DATAOBJECT_DIR . '/css/ArrayListField.scss.css');
+		Requirements::javascript('zauberfisch/silverstripe-serialized-dataobject:javascript/ArrayListField.js');
+		Requirements::css('zauberfisch/silverstripe-serialized-dataobject:css/ArrayListField.scss.css');
 		$records = $this->Value()->getValue();
 		$fields = [];
 		foreach ($records as $i => $record) {

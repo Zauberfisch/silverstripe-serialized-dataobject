@@ -1,7 +1,7 @@
 {
 	"name": "zauberfisch/silverstripe-serialized-dataobject",
 	"description": "SilverStripe database field that allows saving arbitrary data in a single db field using serialization",
-	"type": "silverstripe-module",
+	"type": "silverstripe-vendormodule",
 	"keywords": [
 		"silverstripe",
 		"serialize",
@@ -20,6 +20,20 @@
 	"require": {
 		"php": "^7",
 		"ext-json": "*",
-		"silverstripe/framework": "^4.2"
-	}
+		"silverstripe/framework": "^4.4.1",
+		"silverstripe/vendor-plugin": "*"
+	},
+	"extra": {
+		"expose": [
+			"css",
+			"javascript"
+		]
+	},
+	"autoload": {
+		"psr-4": {
+			"zauberfisch\\SerializedDataObject\\": "src/"
+		}
+	},
+	"prefer-stable": true,
+	"minimum-stability": "dev"
 }

@@ -13,9 +13,8 @@ if (class_exists('\SilverStripe\AssetAdmin\Forms\UploadField')) {
 	 */
 	class SortableUploadField extends UploadField {
 		public function Field($properties = []) {
-			Requirements::javascript(SERIALIZED_DATAOBJECT_DIR . '/javascript/SortableUploadField.js');
-			//\Requirements::css(SERIALIZED_DATAOBJECT_DIR . '/scss/SortableUploadField.scss');
-			Requirements::css(SERIALIZED_DATAOBJECT_DIR . '/css/SortableUploadField.scss.css');
+			Requirements::javascript('zauberfisch/silverstripe-serialized-dataobject:javascript/SortableUploadField.js');
+			Requirements::css('zauberfisch/silverstripe-serialized-dataobject:css/SortableUploadField.scss.css');
 			return parent::Field($properties);
 		}
 		
