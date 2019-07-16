@@ -64,7 +64,7 @@
         .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls > .form__fieldgroup .orderable-up:hover, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls > .form__fieldgroup .orderable-down:hover, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls > .form__fieldgroup .delete-record:hover {
           background: transparent;
           opacity: .6; }
-    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record:first-child .controls > .form__fieldgroup .orderable-up,
-    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record:last-child .controls > .form__fieldgroup .orderable-down {
+    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record:first-child > .controls > .form__fieldgroup .orderable-up,
+    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record:last-child > .controls > .form__fieldgroup .orderable-down {
       cursor: default;
       opacity: .4 !important; }

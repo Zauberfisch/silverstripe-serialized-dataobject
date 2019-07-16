@@ -175,7 +175,7 @@ class ArrayListField extends FormField {
 		$this->prefixRecordFields($index, $recordFields);
 		$callback = $this->getRecordFieldsUpdateCallback();
 		if ($callback) {
-			$recordFields = call_user_func($callback, $recordFields, $this, $record);
+			$recordFields = call_user_func($callback, $recordFields, $this, $record, $index);
 		}
 		return (new CompositeField($recordFields))->addExtraClass('record');
 	}

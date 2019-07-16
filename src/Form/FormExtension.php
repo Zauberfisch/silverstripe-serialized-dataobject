@@ -27,7 +27,7 @@ class FormExtension extends Extension {
 			foreach ($this->owner->Fields()->dataFields() as $dataField) {
 				/** @var FormField|ArrayListField $dataField */
 				if ($dataField instanceof ArrayListField) {
-					if (strpos($fieldName, $dataField->getName()) == 0) {
+					if (strpos($fieldName, $dataField->getName()) === 0) {
 						$field = $dataField->handleSubField($fieldName);
 						break;
 					}

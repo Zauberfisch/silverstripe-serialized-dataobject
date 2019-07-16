@@ -2,6 +2,7 @@
 	$('.zauberfisch\\\\SerializedDataObject\\\\Form\\\\ArrayListField').entwine({
 		getRecordList: function () {
 			return this.find('.record-list > .form__fieldgroup');
+			// return this.find('> .middleColumn > div.CompositeField > .record-list');
 		}
 	});
 	$('.zauberfisch\\\\SerializedDataObject\\\\Form\\\\ArrayListField *').entwine({
@@ -40,7 +41,7 @@
 			var field = this.getContainerField(),
 				recordList = field.getRecordList(),
 				_this = this,
-				newIndex = recordList.find('.record').length,
+				newIndex = recordList.find('> .record').length,
 				url = field.data('add-record-url');
 			this.addClass('loading');
 			this.getRootForm().addClass('changed');
@@ -74,11 +75,9 @@
 			var record = this.closest('.record'),
 				recordList = this.getContainerField().getRecordList(),
 				index = record.index();
-			// console.log(index);
-			// console.log(recordList.find('.record').length - 1);
 			if (
 				(index === 0 && this.hasClass('orderable-up')) ||
-				(index === recordList.find('.record').length - 1 && this.hasClass('orderable-down'))
+				(index === recordList.find('> .record').length - 1 && this.hasClass('orderable-down'))
 			) {
 				return false;
 			}
