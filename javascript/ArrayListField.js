@@ -42,10 +42,11 @@
 				recordList = field.getRecordList(),
 				_this = this,
 				newIndex = recordList.find('> .record').length,
+				classNameHash = this.data('classnamehash'),
 				url = field.data('add-record-url');
 			this.addClass('loading');
 			this.getRootForm().addClass('changed');
-			$.get(url, {'index': newIndex}, function (content) {
+			$.get(url, {'index': newIndex, 'ClassNameHash': classNameHash}, function (content) {
 				recordList.append(content);
 				_this.removeClass('loading');
 				_this.blur();

@@ -20,15 +20,18 @@ use zauberfisch\SerializedDataObject\DBField\ArrayListField as ArrayListDBField;
 class ArrayListField extends FormField {
 	protected $recordFieldsCallback;
 	protected $recordFieldsUpdateCallback;
-	protected $recordClassName;
+	protected $recordClassNames = [];
 	protected $orderable = false;
 	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_CUSTOM;
 	protected $compactLayout = false;
 	protected $emptyDefaultValue = false;
 	protected $fieldLabels = [];
 	
-	public function __construct($name, $title, $recordClassName) {
-		$this->recordClassName = $recordClassName;
+	public function __construct($name, $title, $recordClassNames) {
+		$recordClassNames = is_array($recordClassNames) ? array_values($recordClassNames) : [$recordClassNames];
+		foreach ($recordClassNames as $className) {
+			$this->recordClassNames[md5($className)] = $className;
+		}
 		parent::__construct($name, $title);
 	}
 	
@@ -69,7 +72,8 @@ class ArrayListField extends FormField {
 			$return = parent::Value();
 		}
 		if ($this->hasEmptyDefaultValue() && !$return->getValue()->exists()) {
-			$return->getValue()->push(new $this->recordClassName());
+			$class = array_values($this->recordClassNames)[0];
+			$return->getValue()->push(new $class());
 			//$this->value->setValue(new ArrayList(new $this->recordClassName()));
 		}
 		return $return;
@@ -82,8 +86,10 @@ class ArrayListField extends FormField {
 	 */
 	public function createValueFromArray($array) {
 		$records = [];
-		$class = $this->recordClassName;
 		foreach ($array as $recordArray) {
+			$classNameHash = array_keys($recordArray)[0];
+			$recordArray = $recordArray[$classNameHash];
+			$class = $this->recordClassNames[$classNameHash];
 			/** @var AbstractDataObject $record */
 			$record = new $class();
 			$record->update($recordArray);
@@ -130,25 +136,33 @@ class ArrayListField extends FormField {
 				$fields[] = $this->getRecordFields($i, $record);
 			}
 		}
-		/** @noinspection PhpParamsInspection */
-		return (new CompositeField([
-			(new CompositeField($fields))->addExtraClass('record-list'),
-			(new FormAction('addRecord', $this->fieldLabel('AddRecord')))
+		
+		$actions = [];
+		foreach ($this->recordClassNames as $classNameHash => $class) {
+			$actions[] = (new FormAction('addRecord', $this->fieldLabel("$class.AddRecord")))
+				->setAttribute('tabindex', '-1')
+				->setAttribute('data-classnamehash', $classNameHash)
 				->setUseButtonTag(true)
 				->addExtraClass('font-icon-plus')
-				->addExtraClass('add-record'),
-		]))->addExtraClass('field-inner')->FieldHolder()->forTemplate();
+				->addExtraClass('add-record');
+		}
+		
+		/** @noinspection PhpParamsInspection */
+		return (new CompositeField(array_merge([
+			(new CompositeField($fields))->addExtraClass('record-list'),
+		], $actions)))->addExtraClass('field-inner')->FieldHolder()->forTemplate();
 	}
 	
 	/**
 	 * @param int $index
-	 * @param AbstractDataObject|null $record
+	 * @param AbstractDataObject $record
 	 * @return CompositeField
 	 * @throws \Exception
 	 */
-	protected function getRecordFields($index, AbstractDataObject $record = null) {
+	protected function getRecordFields($index, AbstractDataObject $record) {
+		$className = get_class($record);
 		/** @var FieldList $recordFields */
-		$recordFields = call_user_func($this->getRecordFieldsCallback(), $this, $record);
+		$recordFields = call_user_func($this->getRecordFieldsCallback($className), $this, $record);
 		if (!is_a($recordFields, FieldList::class)) {
 			throw new \Exception(sprintf(
 				'RecordFieldsCallback is expected to return FieldList, but returned "%s"',
@@ -162,7 +176,7 @@ class ArrayListField extends FormField {
 				->setUseButtonTag(true)
 				->addExtraClass('delete-record')
 				->addExtraClass('font-icon-cancel-circled')
-				->setAttribute('data-confirm', $this->fieldLabel('ConfirmDelete')),
+				->setAttribute('data-confirm', $this->fieldLabel("$className.ConfirmDelete")),
 		];
 		if ($this->orderable) {
 			$controls [] = (new FormAction('ArrayListFieldControlsOrderableUp', ''))
@@ -180,7 +194,7 @@ class ArrayListField extends FormField {
 				->setName('ArrayListFieldControls')
 				->addExtraClass('controls')
 		);
-		$this->prefixRecordFields($index, $recordFields);
+		$this->prefixRecordFields($index, $recordFields, $className);
 		$callback = $this->getRecordFieldsUpdateCallback();
 		if ($callback) {
 			$recordFields = call_user_func($callback, $recordFields, $this, $record, $index);
@@ -266,28 +280,32 @@ class ArrayListField extends FormField {
 	/**
 	 * @param $index
 	 * @param FieldList $fields
+	 * @param $className
 	 */
-	protected function prefixRecordFields($index, $fields) {
+	protected function prefixRecordFields($index, $fields, $className) {
 		foreach ($fields as $field) {
 			/** @var FormField|CompositeField $field */
 			$name = $field->getName();
 			if ($name) {
-				$field->setName($this->getPrefixedRecordFieldName($index, $name));
+				$field->setName($this->getPrefixedRecordFieldName($index, $name, $className));
 			}
 			if ($field->isComposite()) {
-				$this->prefixRecordFields($index, $field->FieldList());
+				$this->prefixRecordFields($index, $field->FieldList(), $className);
 			}
 		}
 	}
 	
-	public function getPrefixedRecordFieldName($index, $fieldName) {
-		return sprintf('%s[%s][%s]', $this->getName(), $index, $fieldName);
+	public function getPrefixedRecordFieldName($index, $fieldName, $className) {
+		$classNameHash = array_search($className, $this->recordClassNames);
+		return sprintf('%s[%s][%s][%s]', $this->getName(), $index, $classNameHash, $fieldName);
 	}
 	
 	public function handleSubField($fullFieldName) {
 		$str = substr($fullFieldName, strlen($this->getName()));
-		if (preg_match('/^\[(\d*)\]/', $str, $matches)) {
-			$fields = $this->getRecordFields($matches[1]);
+		if (preg_match('/^\[(\d*)\]\[([^]]*)\]/', $str, $matches)) {
+			$index = $matches[1];
+			$class = $this->recordClassNames[$matches[2]];
+			$fields = $this->getRecordFields($index, new $class());
 			$subField = $fields->FieldList()->dataFieldByName($fullFieldName);
 			if (!$subField) {
 				$subField = $fields->FieldList()->fieldByName($fullFieldName);
@@ -311,7 +329,8 @@ class ArrayListField extends FormField {
 	
 	public function addRecord(HTTPRequest $r) {
 		$index = (int)$r->getVar('index');
-		return $this->getRecordFields($index)->FieldHolder()->forTemplate();
+		$class = $this->recordClassNames[$r->getVar('ClassNameHash')];
+		return $this->getRecordFields($index, new $class())->FieldHolder()->forTemplate();
 	}
 	
 	public function getAddRecordLink() {
@@ -380,20 +399,20 @@ class ArrayListField extends FormField {
 	}
 	
 	/**
+	 * @param string $className
 	 * @return callable
 	 */
-	public function getRecordFieldsCallback() {
+	public function getRecordFieldsCallback($className) {
 		$callback = $this->recordFieldsCallback;
 		if (!is_callable($callback)) {
-			$class = $this->recordClassName;
 			/**
 			 * @param ArrayListField $field
 			 * @param AbstractDataObject $record
 			 * @return mixed
 			 */
-			$callback = function (ArrayListField $field, $record = null) use ($class) {
+			$callback = function (ArrayListField $field, $record = null) use ($className) {
 				if (!$record) {
-					$record = singleton($class);
+					$record = $className::singleton();
 				}
 				return $record->getCMSFields();
 			};
@@ -422,13 +441,16 @@ class ArrayListField extends FormField {
 	}
 	
 	public function fieldLabels() {
-		$values = [
-			'type' => singleton($this->recordClassName)->i18n_singular_name(),
-		];
-		return array_merge([
-			'AddRecord' => _t('zauberfisch\SerializedDataObject\Form\ArrayListField.AddRecord', 'add {type}', $values),
-			'ConfirmDelete' => _t('zauberfisch\SerializedDataObject\Form\ArrayListField.ConfirmDelete', 'Are you sure you want to delete this {type}?', $values),
-		], $this->fieldLabels);
+		$arr = [];
+		foreach ($this->recordClassNames as $class) {
+			$values = [
+				'type' => $class::singleton()->i18n_singular_name(),
+			];
+			$arr["$class.AddRecord"] = _t('zauberfisch\SerializedDataObject\Form\ArrayListField.AddRecord', 'add {type}', $values);
+			$arr["$class.ConfirmDelete"] = _t('zauberfisch\SerializedDataObject\Form\ArrayListField.ConfirmDelete', 'Are you sure you want to delete this {type}?', $values);
+		}
+		$arr = array_merge($arr, $this->fieldLabels);
+		return $arr;
 	}
 	
 	public function fieldLabel($name) {
