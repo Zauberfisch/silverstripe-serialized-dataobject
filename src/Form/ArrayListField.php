@@ -15,7 +15,8 @@ class ArrayListField extends FormField {
 	protected $recordClassName;
 	protected $orderable = false;
 	protected $compactLayout = false;
-
+	protected $emptyDefaultValue = false;
+	
 	public function __construct($name, $title, $recordClassName) {
 		$this->recordClassName = $recordClassName;
 		parent::__construct($name, $title);
@@ -55,6 +56,10 @@ class ArrayListField extends FormField {
 		if (!$return) {
 			$this->setValue(null);
 			$return = parent::Value();
+		}
+		if ($this->hasEmptyDefaultValue() && !$return->getValue()->exists()) {
+			$return->getValue()->push(new $this->recordClassName());
+			//$this->value->setValue(new ArrayList(new $this->recordClassName()));
 		}
 		return $return;
 	}
@@ -286,7 +291,7 @@ class ArrayListField extends FormField {
 	public function saveInto(\DataObjectInterface $record) {
 		$record->{$this->name} = $this->Value();
 	}
-
+	
 	private static $allowed_actions = [
 		'addRecord',
 	];
@@ -331,7 +336,23 @@ class ArrayListField extends FormField {
 	public function isCompactLayout() {
 		return $this->compactLayout;
 	}
-
+	
+	/**
+	 * @param bool $bool
+	 * @return ArrayListField
+	 */
+	public function setEmptyDefaultValue($bool) {
+		$this->emptyDefaultValue = $bool;
+		return $this;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function hasEmptyDefaultValue() {
+		return $this->emptyDefaultValue;
+	}
+	
 	public function setForm($form) {
 		parent::setForm($form);
 	}
