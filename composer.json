@@ -8,7 +8,10 @@
 		"dataobject",
 		"dbfield",
 		"multivalue",
-		"json"
+		"multivaluefield",
+		"json",
+		"gridfield",
+		"arraylist"
 	],
 	"license": "BSD-3-Clause",
 	"authors": [

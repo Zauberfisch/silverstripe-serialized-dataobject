@@ -23,6 +23,9 @@ class ArrayListField extends FormField {
 	protected $recordClassName;
 	protected $orderable = false;
 	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_CUSTOM;
+	protected $compactLayout = false;
+	protected $emptyDefaultValue = false;
+	protected $fieldLabels = [];
 	
 	public function __construct($name, $title, $recordClassName) {
 		$this->recordClassName = $recordClassName;
@@ -65,6 +68,10 @@ class ArrayListField extends FormField {
 			$this->setValue(null);
 			$return = parent::Value();
 		}
+		if ($this->hasEmptyDefaultValue() && !$return->getValue()->exists()) {
+			$return->getValue()->push(new $this->recordClassName());
+			//$this->value->setValue(new ArrayList(new $this->recordClassName()));
+		}
 		return $return;
 	}
 	
@@ -98,9 +105,10 @@ class ArrayListField extends FormField {
 	 */
 	public function FieldHolder($properties = []) {
 		$this->addExtraClass(self::class);
-		if ($this->orderable) {
+		if ($this->isOrderable()) {
 			$this->addExtraClass('orderable');
 		}
+		$this->addExtraClass($this->isCompactLayout() ? 'layout-compact' : 'layout-default');
 		$this->setAttribute('data-name', $this->getName());
 		$this->setAttribute('data-add-record-url', $this->getAddRecordLink());
 		return parent::FieldHolder($properties);
@@ -125,7 +133,7 @@ class ArrayListField extends FormField {
 		/** @noinspection PhpParamsInspection */
 		return (new CompositeField([
 			(new CompositeField($fields))->addExtraClass('record-list'),
-			(new FormAction('addRecord', _t('zauberfisch\SerializedDataObject\Form\ArrayListField.AddRecord', 'add record')))
+			(new FormAction('addRecord', $this->fieldLabel('AddRecord')))
 				->setUseButtonTag(true)
 				->addExtraClass('font-icon-plus')
 				->addExtraClass('add-record'),
@@ -154,7 +162,7 @@ class ArrayListField extends FormField {
 				->setUseButtonTag(true)
 				->addExtraClass('delete-record')
 				->addExtraClass('font-icon-cancel-circled')
-				->setAttribute('data-confirm', _t('zauberfisch\SerializedDataObject\Form\ArrayListField.ConfirmDelete', 'Are you sure you want to delete this record?')),
+				->setAttribute('data-confirm', $this->fieldLabel('ConfirmDelete')),
 		];
 		if ($this->orderable) {
 			$controls [] = (new FormAction('ArrayListFieldControlsOrderableUp', ''))
@@ -167,7 +175,7 @@ class ArrayListField extends FormField {
 				->addExtraClass('font-icon-down-open-big');
 			$controls [] = new LiteralField('ArrayListFieldControlsOrderableHandle', '<div class="orderable-handle"></div>');
 		}
-		$recordFields->unshift(
+		$recordFields->push(
 			(new CompositeField($controls))
 				->setName('ArrayListFieldControls')
 				->addExtraClass('controls')
@@ -325,6 +333,38 @@ class ArrayListField extends FormField {
 	public function isOrderable() {
 		return $this->orderable;
 	}
+
+	/**
+	 * @param bool $bool
+	 * @return ArrayListField
+	 */
+	public function setCompactLayout($bool) {
+		$this->compactLayout = $bool;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isCompactLayout() {
+		return $this->compactLayout;
+	}
+	
+	/**
+	 * @param bool $bool
+	 * @return ArrayListField
+	 */
+	public function setEmptyDefaultValue($bool) {
+		$this->emptyDefaultValue = $bool;
+		return $this;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function hasEmptyDefaultValue() {
+		return $this->emptyDefaultValue;
+	}
 	
 	public function setForm($form) {
 		parent::setForm($form);
@@ -375,5 +415,23 @@ class ArrayListField extends FormField {
 	 */
 	public function getRecordFieldsUpdateCallback() {
 		return $this->recordFieldsUpdateCallback;
+	}
+	
+	public function setFieldLabel($name, $string) {
+		$this->fieldLabels[$name] = $string;
+	}
+	
+	public function fieldLabels() {
+		$values = [
+			'type' => singleton($this->recordClassName)->i18n_singular_name(),
+		];
+		return array_merge([
+			'AddRecord' => _t('zauberfisch\SerializedDataObject\Form\ArrayListField.AddRecord', 'add {type}', $values),
+			'ConfirmDelete' => _t('zauberfisch\SerializedDataObject\Form\ArrayListField.ConfirmDelete', 'Are you sure you want to delete this {type}?', $values),
+		], $this->fieldLabels);
+	}
+	
+	public function fieldLabel($name) {
+		return $this->fieldLabels()[$name];
 	}
 }

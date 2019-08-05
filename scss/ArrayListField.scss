@@ -1,12 +1,17 @@
 .zauberfisch\\SerializedDataObject\\Form\\ArrayListField {
-	> label.left {
-		display: block;
-		float: none;
-		padding-bottom: 10px;
+	.add-record {
+		margin: 0 !important;
 	}
-	> .middleColumn {
-		max-width: 83.33333%;
+	
+	div.field {
+		border: 0;
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
+		box-shadow: none;
+		margin: 0;
+		padding: 0 0 5px;
 	}
+	
 	div.CompositeField {
 		margin: 0 !important;
 		padding: 0 !important;
@@ -20,50 +25,19 @@
 			flex: none !important;
 		}
 	}
-	//div.field-inner {
-	//	display: block !important;
-	//
-	//	> div {
-	//		margin-left: 0 !important;
-	//		display: block !important;
-	//		padding-left: 0 !important;
-	//		padding-right: 0 !important;
-	//		max-width: 83.33333% !important;
-	//		-webkit-flex: none !important;
-	//		flex: none !important;
-	//	}
-	//}
-	div.field {
-		border: 0;
-		-webkit-box-shadow: none;
-		-moz-box-shadow: none;
-		box-shadow: none;
-		margin: 0;
-		padding: 0 0 5px;
-	}
-	div.record-list {
-		border-radius: 3px;
-		border: 1px solid #CDCCD0;
-		background: rgba(#000, .05);
-		margin: 0 0 10px !important;
-		
-		.record {
-			padding: 15px 10px 10px !important;
-			border-bottom: 1px solid #CDCCD0;
+	
+	> .middleColumn > div > div > div.record-list {
+		> div > .record {
 			position: relative;
 			
-			&:last-child {
-				border-bottom: 0;
+			> div:after {
+				content: " ";
+				display: block;
+				clear: both;
 			}
-			&.pre-delete {
-				background: rgba(red, .05);
-			}
-			.controls {
-				position: absolute;
-				right: 0;
-				top: 0;
-				//right: 5px;
-				//top: 10px;
+		
+			> div > .controls {
+				position: relative;
 				z-index: 50;
 				
 				> .form__fieldgroup {
@@ -75,7 +49,7 @@
 					
 					button {
 						background: transparent;
-						border-radius: none;
+						border-radius: 0;
 					}
 					.orderable-handle {
 						height: 22px;
@@ -99,11 +73,91 @@
 					}
 				}
 			}
-			&:first-child > .controls > .form__fieldgroup .orderable-up,
-			&:last-child > .controls > .form__fieldgroup .orderable-down {
+			
+			&:first-child > div >.controls > .form__fieldgroup .orderable-up,
+			&:last-child > div >.controls > .form__fieldgroup .orderable-down {
 				cursor: default;
 				opacity: .4 !important;
 			}
 		}
 	}
+	
+	&.layout-default {
+		> label.form__field-label {
+			display: block;
+			-webkit-flex: none !important;
+			flex: none !important;
+			padding-bottom: 10px;
+		}
+		
+		> .middleColumn {
+			max-width: none !important;
+			-webkit-flex: none !important;
+			flex: none !important;
+			
+			> div > div > div.record-list {
+				border-radius: 3px;
+				border: 1px solid #CDCCD0;
+				background: rgba(#000, .05);
+				margin: 0 0 10px !important;
+				
+				> div > .record {
+					padding: 15px 10px 10px !important;
+					border-bottom: 1px solid #CDCCD0;
+					
+					&:last-child {
+						border-bottom: 0;
+					}
+					
+					&.pre-delete {
+						background: rgba(red, .05);
+					}
+					
+					> div > .controls {
+						position: absolute;
+						right: 0;
+						top: 0;
+					}
+				}
+			}
+		}
+	}
+	
+	&.layout-compact {
+		> .middleColumn > div > div > div.record-list {
+			> div > .record {
+				&.pre-delete {
+					background: rgba(red, .05);
+				}
+				
+				> div > .fieldgroup {
+					float: left;
+				}
+				
+				> div > .controls {
+					padding-top: 5px !important;
+					padding-left: 5px !important;
+					float: left;
+				}
+				
+				.field--small label.form__fieldgroup-label {
+					display: none;
+				}
+			}
+		}
+	}
+
+	//div.field-inner {
+	//	display: block !important;
+	//
+	//	> div {
+	//		margin-left: 0 !important;
+	//		display: block !important;
+	//		padding-left: 0 !important;
+	//		padding-right: 0 !important;
+	//		max-width: 83.33333% !important;
+	//		-webkit-flex: none !important;
+	//		flex: none !important;
+	//	}
+	//}
 }
