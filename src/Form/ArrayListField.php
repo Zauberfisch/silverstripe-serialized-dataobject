@@ -16,6 +16,7 @@ class ArrayListField extends FormField {
 	protected $orderable = false;
 	protected $compactLayout = false;
 	protected $emptyDefaultValue = false;
+	protected $fieldLabels = [];
 	
 	public function __construct($name, $title, $recordClassName) {
 		$this->recordClassName = $recordClassName;
@@ -122,7 +123,7 @@ class ArrayListField extends FormField {
 		/** @noinspection PhpParamsInspection */
 		return (new CompositeField([
 			(new CompositeField($fields))->addExtraClass('record-list'),
-			(new \FormAction('addRecord', _t('zauberfisch\SerializedDataObject\Form\ArrayListField.AddRecord', 'add record')))
+			(new \FormAction('addRecord', $this->fieldLabel('AddRecord')))
 				->setUseButtonTag(true)
 				->addExtraClass('font-icon-plus')
 				->addExtraClass('add-record'),
@@ -151,7 +152,7 @@ class ArrayListField extends FormField {
 				->setUseButtonTag(true)
 				->addExtraClass('delete-record')
 				->addExtraClass('font-icon-cancel-circled')
-				->setAttribute('data-confirm', _t('zauberfisch\SerializedDataObject\Form\ArrayListField.ConfirmDelete', 'Are you sure you want to delete this record?')),
+				->setAttribute('data-confirm', $this->fieldLabel('ConfirmDelete')),
 		];
 		if ($this->orderable) {
 			$controls [] = (new \FormAction('ArrayListFieldControlsOrderableUp', ''))
@@ -402,5 +403,23 @@ class ArrayListField extends FormField {
 	 */
 	public function getRecordFieldsUpdateCallback() {
 		return $this->recordFieldsUpdateCallback;
+	}
+	
+	public function setFieldLabel($name, $string) {
+		$this->fieldLabels[$name] = $string;
+	}
+	
+	public function fieldLabels() {
+		$values = [
+			'type' => singleton($this->recordClassName)->i18n_singular_name(),
+		];
+		return array_merge([
+			'AddRecord' => _t('zauberfisch\SerializedDataObject\Form\ArrayListField.AddRecord', 'add {type}', $values),
+			'ConfirmDelete' => _t('zauberfisch\SerializedDataObject\Form\ArrayListField.ConfirmDelete', 'Are you sure you want to delete this {type}?', $values),
+		], $this->fieldLabels);
+	}
+	
+	public function fieldLabel($name) {
+		return $this->fieldLabels()[$name];
 	}
 }
