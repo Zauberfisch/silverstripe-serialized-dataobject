@@ -14,6 +14,7 @@ class ArrayListField extends FormField {
 	protected $recordFieldsUpdateCallback;
 	protected $recordClassName;
 	protected $orderable = false;
+	protected $compactLayout = false;
 
 	public function __construct($name, $title, $recordClassName) {
 		$this->recordClassName = $recordClassName;
@@ -88,9 +89,10 @@ class ArrayListField extends FormField {
 	 */
 	public function FieldHolder($properties = []) {
 		$this->addExtraClass(self::class);
-		if ($this->orderable) {
+		if ($this->isOrderable()) {
 			$this->addExtraClass('orderable');
 		}
+		$this->addExtraClass($this->isCompactLayout() ? 'layout-compact' : 'layout-default');
 		$this->setAttribute('data-name', $this->getName());
 		$this->setAttribute('data-add-record-url', $this->getAddRecordLink());
 		return parent::FieldHolder($properties);
@@ -157,7 +159,7 @@ class ArrayListField extends FormField {
 				->addExtraClass('font-icon-down-open-big');
 			$controls [] = new \LiteralField('ArrayListFieldControlsOrderableHandle', '<div class="orderable-handle"></div>');
 		}
-		$recordFields->unshift(
+		$recordFields->push(
 			(new CompositeField($controls))
 				->setName('ArrayListFieldControls')
 				->addExtraClass('controls')
@@ -312,6 +314,22 @@ class ArrayListField extends FormField {
 	 */
 	public function isOrderable() {
 		return $this->orderable;
+	}
+
+	/**
+	 * @param bool $bool
+	 * @return ArrayListField
+	 */
+	public function setCompactLayout($bool) {
+		$this->compactLayout = $bool;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isCompactLayout() {
+		return $this->compactLayout;
 	}
 
 	public function setForm($form) {

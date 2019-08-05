@@ -1,10 +1,5 @@
-.zauberfisch\\SerializedDataObject\\Form\\ArrayListField > label.left {
-  display: block;
-  float: none;
-  padding-bottom: 10px; }
-
-.zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn {
-  margin-left: 0; }
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField .add-record {
+  margin: 0 !important; }
 
 .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.field {
   border: 0;
@@ -14,41 +9,74 @@
   margin: 0;
   padding: 0 0 5px; }
 
-.zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list {
-  border-radius: 3px;
-  border: 1px solid #CDCCD0;
-  background: rgba(0, 0, 0, 0.05);
-  margin: 0 0 10px; }
-  .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record {
-    padding: 20px 10px 10px;
-    border-bottom: 1px solid #CDCCD0;
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record {
+  position: relative; }
+  .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls {
     position: relative; }
-    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record:last-child {
-      border-bottom: 0; }
-    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record.pre-delete {
-      background: rgba(255, 0, 0, 0.05); }
-    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls {
-      position: absolute;
-      right: 5px;
-      top: 10px; }
-      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls > * {
-        display: block;
-        float: left;
-        margin: 0 5px 0 0; }
-      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .orderable-handle {
-        height: 22px;
-        width: 16px;
-        cursor: move;
-        background: center center no-repeat url("../images/orderable-handle.png"); }
-      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .orderable-up, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .orderable-down, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .delete-record {
-        padding: 2px; }
-        .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .orderable-up:before, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .orderable-down:before, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .delete-record:before {
-          margin: 0; }
-        .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .orderable-up span, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .orderable-down span, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .delete-record span {
-          display: none; }
-        .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .orderable-up:hover, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .orderable-down:hover, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record .controls .delete-record:hover {
-          background: transparent;
-          opacity: .6; }
-    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record:first-child > .controls .orderable-up, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField div.record-list .record:last-child > .controls .orderable-down {
-      cursor: default;
-      opacity: .4 !important; }
+    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls > * {
+      display: block;
+      float: left;
+      margin: 0 5px 0 0; }
+    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .orderable-handle {
+      height: 22px;
+      width: 16px;
+      cursor: move;
+      background: center center no-repeat url("../images/orderable-handle.png"); }
+    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .orderable-up, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .orderable-down, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .delete-record {
+      padding: 2px; }
+      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .orderable-up:before, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .orderable-down:before, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .delete-record:before {
+        margin: 0; }
+      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .orderable-up span, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .orderable-down span, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .delete-record span {
+        display: none; }
+      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .orderable-up:hover, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .orderable-down:hover, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record > .controls .delete-record:hover {
+        background: transparent;
+        opacity: .6; }
+  .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record:first-child > .controls .orderable-up, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div.record-list > .record:last-child > .controls .orderable-down {
+    cursor: default;
+    opacity: .4 !important; }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > label.left {
+  display: block;
+  float: none;
+  padding-bottom: 10px; }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn {
+  margin-left: 0; }
+  .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div.record-list {
+    border-radius: 3px;
+    border: 1px solid #CDCCD0;
+    background: rgba(0, 0, 0, 0.05);
+    margin: 0 0 10px; }
+    .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div.record-list > .record {
+      padding: 20px 10px 10px;
+      border-bottom: 1px solid #CDCCD0; }
+      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div.record-list > .record:last-child {
+        border-bottom: 0; }
+      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div.record-list > .record.pre-delete {
+        background: rgba(255, 0, 0, 0.05); }
+      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div.record-list > .record > .controls {
+        position: absolute;
+        right: 5px;
+        top: 10px; }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-compact > .middleColumn > div > div.record-list > .record.pre-delete {
+  background: rgba(255, 0, 0, 0.05); }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-compact > .middleColumn > div > div.record-list > .record .fieldgroup-field {
+  padding-top: 0; }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-compact > .middleColumn > div > div.record-list > .record .CompositeField {
+  padding: 0; }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-compact > .middleColumn > div > div.record-list > .record .fieldgroup .fieldgroup-field {
+  padding-bottom: 0; }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-compact > .middleColumn > div > div.record-list > .record > .fieldgroup {
+  float: left; }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-compact > .middleColumn > div > div.record-list > .record > .controls {
+  padding-top: 5px;
+  float: left; }
+
+.zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-compact > .middleColumn > div > div.record-list > .record label.fieldholder-small-label {
+  display: none; }

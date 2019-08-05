@@ -1,12 +1,8 @@
 .zauberfisch\\SerializedDataObject\\Form\\ArrayListField {
-	> label.left {
-		display: block;
-		float: none;
-		padding-bottom: 10px;
+	.add-record {
+		margin: 0 !important;
 	}
-	> .middleColumn {
-		margin-left: 0;
-	}
+	
 	div.field {
 		border: 0;
 		-webkit-box-shadow: none;
@@ -15,57 +11,121 @@
 		margin: 0;
 		padding: 0 0 5px;
 	}
-	div.record-list {
-		border-radius: 3px;
-		border: 1px solid #CDCCD0;
-		background: rgba(#000, .05);
-		margin: 0 0 10px;
-
-		.record {
-			padding: 20px 10px 10px;
-			border-bottom: 1px solid #CDCCD0;
+	
+	> .middleColumn > div > div.record-list {
+		> .record {
 			position: relative;
-
-			&:last-child {
-				border-bottom: 0;
-			}
-			&.pre-delete {
-				background: rgba(red, .05);
-			}
-			.controls {
-				position: absolute;
-				right: 5px;
-				top: 10px;
-
+			
+			> .controls {
+				position: relative;
+				
 				> * {
 					display: block;
 					float: left;
 					margin: 0 5px 0 0;
 				}
+				
 				.orderable-handle {
 					height: 22px;
 					width: 16px;
 					cursor: move;
 					background: center center no-repeat url('../images/orderable-handle.png');
 				}
+				
 				.orderable-up, .orderable-down, .delete-record {
 					padding: 2px;
-
+					
 					&:before {
 						margin: 0;
 					}
+					
 					span {
 						display: none;
 					}
+					
 					&:hover {
 						background: transparent;
 						opacity: .6;
 					}
 				}
 			}
+			
 			&:first-child > .controls .orderable-up, &:last-child > .controls .orderable-down {
 				cursor: default;
 				opacity: .4 !important;
+			}
+		}
+	}
+	
+	&.layout-default {
+		> label.left {
+			display: block;
+			float: none;
+			padding-bottom: 10px;
+		}
+		
+		> .middleColumn {
+			margin-left: 0;
+			
+			> div > div.record-list {
+				border-radius: 3px;
+				border: 1px solid #CDCCD0;
+				background: rgba(#000, .05);
+				margin: 0 0 10px;
+				
+				> .record {
+					padding: 20px 10px 10px;
+					border-bottom: 1px solid #CDCCD0;
+					
+					&:last-child {
+						border-bottom: 0;
+					}
+					
+					&.pre-delete {
+						background: rgba(red, .05);
+					}
+					
+					> .controls {
+						position: absolute;
+						right: 5px;
+						top: 10px;
+					}
+				}
+			}
+		}
+	}
+	
+	&.layout-compact {
+		> .middleColumn > div > div.record-list {
+			> .record {
+				&.pre-delete {
+					background: rgba(red, .05);
+				}
+				
+				.fieldgroup-field {
+					padding-top: 0;
+				}
+				
+				.CompositeField {
+					padding: 0;
+				}
+				
+				.fieldgroup .fieldgroup-field {
+					padding-bottom: 0;
+				}
+				
+				> .fieldgroup {
+					float: left;
+				}
+				
+				> .controls {
+					padding-top: 5px;
+					float: left;
+				}
+				
+				label.fieldholder-small-label {
+					display: none;
+				}
 			}
 		}
 	}
