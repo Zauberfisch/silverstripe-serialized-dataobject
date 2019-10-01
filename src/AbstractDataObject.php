@@ -71,14 +71,6 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		}
 	}
 
-	public function __get($fieldName) {
-		return $this->getField($fieldName);
-	}
-
-	public function __set($fieldName, $value) {
-		return $this->setField($fieldName, $value);
-	}
-
 //	public function __call($method, $arguments) {
 //		if ($this->hasList($method)) {
 //			return $this->getList($method);
