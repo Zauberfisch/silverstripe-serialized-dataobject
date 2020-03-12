@@ -57,7 +57,7 @@ abstract class AbstractDataObject extends \ViewableData implements \Serializable
 		$this->fieldsData = isset($data['fieldsData']) ? $data['fieldsData'] : [];
 		$this->listsData = isset($data['listsData']) ? $data['listsData'] : [];
 		foreach (\ClassInfo::ancestry(get_called_class()) as $class) {
-			if (in_array($class, \Config::inst()->get(\Object::class, 'unextendable_classes'))) {
+			if (in_array($class, \Config::inst()->get(\SS_Object::class, 'unextendable_classes'))) {
 				continue;
 			}
 			$extensions = \Config::inst()->get($class, 'extensions',
