@@ -17,7 +17,7 @@ class ArrayListField extends FormField {
 	protected $compactLayout = false;
 	protected $emptyDefaultValue = false;
 	protected $fieldLabels = [];
-	
+
 	public function __construct($name, $title, $recordClassNames) {
 		$recordClassNames = is_array($recordClassNames) ? array_values($recordClassNames) : [$recordClassNames];
 		foreach ($recordClassNames as $className) {
@@ -182,11 +182,11 @@ class ArrayListField extends FormField {
 				->setName('ArrayListFieldControls')
 				->addExtraClass('controls')
 		);
-		$this->prefixRecordFields($index, $recordFields, $className);
 		$callback = $this->getRecordFieldsUpdateCallback();
 		if ($callback) {
 			$recordFields = call_user_func($callback, $recordFields, $this, $record, $index);
 		}
+		$this->prefixRecordFields($index, $recordFields, $className);
 		return (new CompositeField($recordFields))->addExtraClass('record');
 	}
 
@@ -281,7 +281,7 @@ class ArrayListField extends FormField {
 			}
 		}
 	}
-	
+
 	public function getPrefixedRecordFieldName($index, $fieldName, $className) {
 		$classNameHash = array_search($className, $this->recordClassNames);
 		return sprintf('%s[%s][%s][%s]', $this->getName(), $index, $classNameHash, $fieldName);
@@ -309,7 +309,7 @@ class ArrayListField extends FormField {
 	public function saveInto(\DataObjectInterface $record) {
 		$record->{$this->name} = $this->Value();
 	}
-	
+
 	private static $allowed_actions = [
 		'addRecord',
 	];
@@ -355,7 +355,7 @@ class ArrayListField extends FormField {
 	public function isCompactLayout() {
 		return $this->compactLayout;
 	}
-	
+
 	/**
 	 * @param bool $bool
 	 * @return ArrayListField
@@ -364,14 +364,14 @@ class ArrayListField extends FormField {
 		$this->emptyDefaultValue = $bool;
 		return $this;
 	}
-	
+
 	/**
 	 * @return bool
 	 */
 	public function hasEmptyDefaultValue() {
 		return $this->emptyDefaultValue;
 	}
-	
+
 	public function setForm($form) {
 		parent::setForm($form);
 	}
@@ -422,11 +422,11 @@ class ArrayListField extends FormField {
 	public function getRecordFieldsUpdateCallback() {
 		return $this->recordFieldsUpdateCallback;
 	}
-	
+
 	public function setFieldLabel($name, $string) {
 		$this->fieldLabels[$name] = $string;
 	}
-	
+
 	public function fieldLabels() {
 		$arr = [];
 		foreach ($this->recordClassNames as $class) {
@@ -439,7 +439,7 @@ class ArrayListField extends FormField {
 		$arr = array_merge($arr, $this->fieldLabels);
 		return $arr;
 	}
-	
+
 	public function fieldLabel($name) {
 		return $this->fieldLabels()[$name];
 	}
