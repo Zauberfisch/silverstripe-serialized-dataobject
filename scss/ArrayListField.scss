@@ -112,7 +112,19 @@
 					&.pre-delete {
 						background: rgba(red, .05);
 					}
-					
+
+					.fieldgroup {
+						div.field.checkbox {
+							padding: 0 0 10px;
+
+							input {
+								position: static;
+								margin: 0;
+								vertical-align: top;
+							}
+						}
+					}
+
 					> div > .controls {
 						position: absolute;
 						right: 0;

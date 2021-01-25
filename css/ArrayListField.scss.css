@@ -50,8 +50,7 @@
       .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div > div.record-list > div > .record > div > .controls > .form__fieldgroup .orderable-up:hover, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div > div.record-list > div > .record > div > .controls > .form__fieldgroup .orderable-down:hover, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div > div.record-list > div > .record > div > .controls > .form__fieldgroup .delete-record:hover {
         background: transparent;
         opacity: .6; }
-  .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div > div.record-list > div > .record:first-child > div > .controls > .form__fieldgroup .orderable-up,
-  .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div > div.record-list > div > .record:last-child > div > .controls > .form__fieldgroup .orderable-down {
+  .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div > div.record-list > div > .record:first-child > div > .controls > .form__fieldgroup .orderable-up, .zauberfisch\\SerializedDataObject\\Form\\ArrayListField > .middleColumn > div > div > div.record-list > div > .record:last-child > div > .controls > .form__fieldgroup .orderable-down {
     cursor: default;
     opacity: .4 !important; }
 
@@ -67,16 +66,22 @@
   flex: none !important; }
   .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div > div.record-list {
     border-radius: 3px;
-    border: 1px solid #CDCCD0;
+    border: 1px solid #cdccd0;
     background: rgba(0, 0, 0, 0.05);
     margin: 0 0 10px !important; }
     .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div > div.record-list > div > .record {
       padding: 15px 10px 10px !important;
-      border-bottom: 1px solid #CDCCD0; }
+      border-bottom: 1px solid #cdccd0; }
       .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div > div.record-list > div > .record:last-child {
         border-bottom: 0; }
       .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div > div.record-list > div > .record.pre-delete {
         background: rgba(255, 0, 0, 0.05); }
+      .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div > div.record-list > div > .record .fieldgroup div.field.checkbox {
+        padding: 0 0 10px; }
+        .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div > div.record-list > div > .record .fieldgroup div.field.checkbox input {
+          position: static;
+          margin: 0;
+          vertical-align: top; }
       .zauberfisch\\SerializedDataObject\\Form\\ArrayListField.layout-default > .middleColumn > div > div > div.record-list > div > .record > div > .controls {
         position: absolute;
         right: 0;
