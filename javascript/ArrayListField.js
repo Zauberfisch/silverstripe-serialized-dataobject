@@ -38,6 +38,9 @@
 	});
 	$('.zauberfisch\\\\SerializedDataObject\\\\Form\\\\ArrayListField .add-record').entwine({
 		onclick: function () {
+			if (this.hasClass('loading')) {
+				return false;
+			}
 			var field = this.getContainerField(),
 				recordList = field.getRecordList(),
 				_this = this,
