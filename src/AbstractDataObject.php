@@ -254,8 +254,11 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 	public function __toString() {
 		return Serializer::serialize($this);
 	}
-	
-	
+
+	public function ClassName() {
+		return get_class($this);
+	}
+
 	/**
 	 * Process tri-state responses from permission-alterting extensions.  The extensions are
 	 * expected to return one of three values:
