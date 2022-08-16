@@ -26,27 +26,27 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 	private static $lists = [];
 	protected $fieldsData = [];
 	protected $listsData = [];
-	
+
 	use JsonSerializer {
 		jsonSerialize as jsonSerializeTrait;
 	}
-	
-	public function jsonSerialize() {
+
+	public function jsonSerialize(): array {
 		return array_merge([
 			'fieldsData' => $this->fieldsData,
 			'listsData' => $this->listsData,
 		], $this->jsonSerializeTrait());
 	}
-	
+
 	public function jsonDeserialize(array $data = null) {
 		$this->fieldsData = isset($data['fieldsData']) ? $data['fieldsData'] : [];
 		$this->listsData = isset($data['listsData']) ? $data['listsData'] : [];
 	}
-	
+
 	public function __construct() {
 		parent::__construct();
 	}
-	
+
 	///**
 	// * @deprecated 4.0 Support for php serialisation will be removed in Version 4.0
 	// * @return string
@@ -81,11 +81,11 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 	//		}
 	//	}
 	//}
-	
+
 	public function __get($fieldName) {
 		return $this->getField($fieldName);
 	}
-	
+
 	public function __set($fieldName, $value) {
 		return $this->setField($fieldName, $value);
 	}
@@ -102,7 +102,7 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 //		//	}
 //		return parent::__call($method, $arguments);
 //	}
-	
+
 	public function defineMethods() {
 		parent::defineMethods();
 		// TODO how to handle method name collisions?
@@ -123,11 +123,11 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 			});
 		}
 	}
-	
+
 	public function hasField($name) {
 		return in_array($name, static::config()->fields);
 	}
-	
+
 	public function getField($name) {
 		if ($this->hasField($name)) {
 			if (isset($this->fieldsData[$name])) {
@@ -137,7 +137,7 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		throw new \Exception("Could not find field '$name'.");
 	}
-	
+
 	public function setField($name, $value) {
 		if ($this->hasField($name)) {
 			$this->fieldsData[$name] = $value;
@@ -145,11 +145,11 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		throw new \Exception("Could not find field '$name'.");
 	}
-	
+
 	public function hasList($name) {
 		return in_array($name, static::config()->lists);
 	}
-	
+
 	public function getList($name) {
 		if ($this->hasList($name)) {
 			if (!isset($this->listsData[$name])) {
@@ -160,7 +160,7 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		throw new \Exception("Could not find field '$name'.");
 	}
-	
+
 	public function setList($name, AbstractList $value) {
 		if ($this->hasList($name)) {
 			$this->listsData[$name] = $value;
@@ -168,7 +168,7 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		throw new \Exception("Could not find field '$name'.");
 	}
-	
+
 	/**
 	 * @param array $data
 	 * @return $this
@@ -189,9 +189,9 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		return $this;
 	}
-	
+
 	private static $_cache_field_labels = [];
-	
+
 	protected function i18nFields() {
 		$fields = [];
 		$ancestry = array_reverse(ClassInfo::ancestry($this));
@@ -214,7 +214,7 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		return $fields;
 	}
-	
+
 	public function fieldLabels() {
 		$cacheKey = get_class($this);
 		if (!isset(self::$_cache_field_labels[$cacheKey])) {
@@ -233,12 +233,12 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		return self::$_cache_field_labels[$cacheKey];
 	}
-	
+
 	public function fieldLabel($name) {
 		$labels = $this->fieldLabels();
 		return (isset($labels[$name])) ? $labels[$name] : FormField::name_to_label($name);
 	}
-	
+
 	public function provideI18nEntities() {
 		$entities = [];
 		foreach ($this->i18nFields() as $className => $types) {
@@ -250,7 +250,7 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		return $entities;
 	}
-	
+
 	public function __toString() {
 		return Serializer::serialize($this);
 	}
@@ -295,7 +295,7 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param Member $member
 	 * @return boolean
@@ -307,7 +307,7 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		return Permission::check('ADMIN', 'any', $member);
 	}
-	
+
 	/**
 	 * @param Member $member
 	 * @return boolean
@@ -319,7 +319,7 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		return Permission::check('ADMIN', 'any', $member);
 	}
-	
+
 	/**
 	 * @param Member $member
 	 * @return boolean
@@ -331,13 +331,13 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		return Permission::check('ADMIN', 'any', $member);
 	}
-	
+
 	/**
-	 * @todo Should canCreate be a static method?
 	 * @param Member $member
 	 * @param array $context Additional context-specific data which might
 	 * affect whether (or where) this object could be created.
 	 * @return boolean
+	 * @todo Should canCreate be a static method?
 	 */
 	public function canCreate($member = null, $context = []) {
 		$extended = $this->extendedCan(__FUNCTION__, $member, $context);
@@ -346,7 +346,7 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		}
 		return Permission::check('ADMIN', 'any', $member);
 	}
-	
+
 	public function i18n_singular_name() {
 		// TODO fix class name
 		$phpClass = get_class($this);
@@ -354,7 +354,7 @@ abstract class AbstractDataObject extends ViewableData implements JsonSerializab
 		$class = $class[count($class) - 1];
 		return _t("{$phpClass}.SINGULARNAME", FormField::name_to_label($class));
 	}
-	
+
 	public function i18n_plural_name() {
 		$phpClass = get_class($this);
 		$name = $this->i18n_singular_name();

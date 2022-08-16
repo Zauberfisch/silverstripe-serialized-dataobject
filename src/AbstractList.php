@@ -17,7 +17,7 @@ abstract class AbstractList extends \SilverStripe\ORM\ArrayList implements JsonS
 		jsonSerialize as jsonSerializeTrait;
 	}
 
-	public function jsonSerialize() {
+	public function jsonSerialize(): array {
 		return array_merge([
 			'items' => $this->serializeItems(),
 		], $this->jsonSerializeTrait());
