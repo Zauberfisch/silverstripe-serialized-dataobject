@@ -23,7 +23,7 @@
 	"require": {
 		"php": "^7 || ^8",
 		"ext-json": "*",
-		"silverstripe/framework": "^4.5",
+		"silverstripe/framework": "^4.5 || ^5.0",
 		"silverstripe/vendor-plugin": "*"
 	},
 	"extra": {
